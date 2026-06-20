@@ -43,7 +43,6 @@
             gap: 12px; 
         }
 
-        /* লোগো ব্যাকগ্রাউন্ড ও সাইজ হুবহু ইমেজের মতো মেলানো হয়েছে */
         .logo-wrapper {
             display: flex;
             align-items: center;
@@ -51,7 +50,7 @@
             width: 42px;  
             height: 42px;
             border-radius: 8px;
-            background: linear-gradient(to bottom, #03132e, #112d4e); /* লোগো ইমেজের ডার্ক ব্লু গ্রেডিয়েন্ট ব্যাকগ্রাউন্ড */
+            background: linear-gradient(to bottom, #03132e, #112d4e); 
             border: 1px solid rgba(255, 255, 255, 0.1);
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.4);
@@ -233,10 +232,10 @@
         <section class="card balance-card">
             <div class="card-tag">Omnichain</div>
             <h2>Unified Balance Kit</h2>
-            <div class="balance-display"><span id="usdc-balance">0.0000</span> <span id="balance-unit" class="currency">ETH/USDC</span></div>
+            <div class="balance-display"><span id="usdc-balance">0.0000</span> <span id="balance-unit" class="currency">ETH/ARC</span></div>
             <p class="subtext">Aggregated Liquidity via Arc Bridge Router</p>
             <div class="btn-grid">
-                <button id="btn-switch-arc" class="btn-outline">Switch to Arc Net</button>
+                <button id="btn-switch-arc" class="btn-outline">Switch to Arc Testnet</button>
                 <button id="btn-cctp-bridge" class="btn-secondary">Trigger CCTP Mint</button>
             </div>
         </section>
@@ -291,163 +290,19 @@
     </main>
 
     <script>
-        let provider, signer, userAddress;
+        let provider, userAddress;
         let streamInterval;
         let totalStreamed = 0;
 
-        // Arc Chain Configuration (হেক্সাডেসিমেল ফরম্যাট)
-        const ARC_CHAIN_ID_HEX = '0x1F4'; // Chain ID: 500
-        const ARC_CHAIN_PARAMS = {
-            chainId: ARC_CHAIN_ID_HEX,
-            chainName: 'Arc Network Mainnet',
+        // Arc Network Testnet Configurations (Chain ID: 501 বা 0x1F5)
+        const ARC_TESTNET_CHAIN_ID_HEX = '0x1F5'; 
+        const ARC_TESTNET_PARAMS = {
+            chainId: ARC_TESTNET_CHAIN_ID_HEX,
+            chainName: 'Arc Network Testnet',
             nativeCurrency: {
-                name: 'Arc Native',
-                symbol: 'ARC',
+                name: 'Arc Test Token',
+                symbol: 'tARC',
                 decimals: 18
             },
-            rpcUrls: ['https://rpc.arcnetwork.io'], // অফিশিয়াল আরপিসি ইউআরএল
-            blockExplorerUrls: ['https://explorer.arcnetwork.io']
-        };
-
-        // রিয়েল ব্যালেন্স আপডেট ফাংশন
-        async function updateRealBalance() {
-            if (!provider || !userAddress) return;
-            try {
-                // মেটামাস্ক থেকে ইউজারের লাইভ চেইনের আসল ব্যালেন্স নিয়ে আসা
-                const balance = await provider.getBalance(userAddress);
-                const ethBalance = ethers.formatEther(balance);
-                
-                // ড্যাশবোর্ডে রিয়েল ব্যালেন্স পুশ করা
-                document.getElementById('usdc-balance').innerText = parseFloat(ethBalance).toFixed(4);
-                
-                // বর্তমানে কোন চেইনে আছে তা চেক করে কারেন্সি কোড পরিবর্তন করা
-                const network = await provider.getNetwork();
-                if (network.chainId === 500n || network.chainId === 500) {
-                    document.getElementById('balance-unit').innerText = 'ARC';
-                } else {
-                    document.getElementById('balance-unit').innerText = 'ETH';
-                }
-            } catch (err) {
-                console.error("Balance update failed:", err);
-            }
-        }
-
-        // ওয়ালেট কানেক্ট লজিক
-        document.getElementById('btn-connect-wallet').addEventListener('click', async () => {
-            if (window.ethereum) {
-                try {
-                    provider = new ethers.BrowserProvider(window.ethereum);
-                    const accounts = await provider.send("eth_requestAccounts", []);
-                    userAddress = accounts[0];
-                    
-                    // UI আপডেট
-                    document.getElementById('wallet-address').innerText = `Address: ${userAddress.substring(0,6)}...${userAddress.substring(38)}`;
-                    document.getElementById('btn-connect-wallet').innerText = "Connected";
-                    
-                    const network = await provider.getNetwork();
-                    document.getElementById('network-display').innerText = `Network: Chain ID ${network.chainId}`;
-                    
-                    // আসল ব্যালেন্স ট্রিগার
-                    await updateRealBalance();
-
-                    // চেইন পরিবর্তন হলে পেজ রিলোড বা অটো ব্যালেন্স আপডেট
-                    window.ethereum.on('chainChanged', () => { window.location.reload(); });
-                    window.ethereum.on('accountsChanged', () => { window.location.reload(); });
-
-                } catch (error) {
-                    console.error(error);
-                    alert("Wallet connection rejected.");
-                }
-            } else {
-                alert("MetaMask not found! Please use a Web3 enabled browser.");
-            }
-        });
-
-        // "Switch to Arc Net" বাটন কার্যকর করা
-        document.getElementById('btn-switch-arc').addEventListener('click', async () => {
-            if (!window.ethereum) return alert("Please connect your wallet first!");
-            
-            try {
-                // প্রথমে মেটামাস্ক-কে আর্ক চেইনে সুইচ করার কমান্ড পাঠানো
-                await window.ethereum.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: ARC_CHAIN_ID_HEX }],
-                });
-                
-                document.getElementById('network-display').innerText = "Network: Arc Mainnet";
-                await updateRealBalance();
-                
-            } catch (switchError) {
-                // মেটামাস্কে যদি আর্ক নেটওয়ার্ক আগে থেকে অ্যাড করা না থাকে (Error 4902)
-                if (switchError.code === 4902) {
-                    try {
-                        await window.ethereum.request({
-                            method: 'wallet_addEthereumChain',
-                            params: [ARC_CHAIN_PARAMS],
-                        });
-                        document.getElementById('network-display').innerText = "Network: Arc Mainnet";
-                        await updateRealBalance();
-                    } catch (addError) {
-                        alert("User denied adding Arc Network.");
-                    }
-                } else {
-                    alert("Failed to switch network: " + switchError.message);
-                }
-            }
-        });
-
-        // Circle WaaS Dummy Simulation
-        document.getElementById('btn-circle-login').addEventListener('click', () => {
-            const email = prompt("Enter your Email for Circle Programmable Wallet Onboarding:");
-            if(email) {
-                document.getElementById('btn-circle-login').innerText = "Circle: Connected";
-                document.getElementById('wallet-address').innerText = `Circle Wallet: 0xCrcl_${email.substring(0,3)}...`;
-                document.getElementById('usdc-balance').innerText = "250.0000"; 
-                document.getElementById('balance-unit').innerText = 'USDC';
-            }
-        });
-
-        // USDC Streaming Simulation
-        document.getElementById('btn-start-stream').addEventListener('click', () => {
-            const recipient = document.getElementById('stream-recipient').value;
-            const rate = parseFloat(document.getElementById('stream-rate').value);
-
-            if (!recipient || isNaN(rate)) {
-                return alert("Please enter a valid recipient address and flow rate!");
-            }
-
-            if (streamInterval) clearInterval(streamInterval); 
-            document.getElementById('live-stream-ticker').style.display = 'block';
-            
-            streamInterval = setInterval(() => {
-                totalStreamed += rate;
-                document.getElementById('streamed-amount').innerText = totalStreamed.toFixed(4);
-            }, 1000);
-        });
-
-        // Voice Command Simulator
-        const voiceBtn = document.getElementById('btn-voice-command');
-        const voiceOutput = document.getElementById('voice-output');
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            const recognition = new SpeechRecognition();
-            voiceBtn.addEventListener('click', () => {
-                recognition.start();
-                voiceOutput.innerText = "🎙️ Listening to Intent Layer...";
-            });
-            recognition.onresult = (e) => { voiceOutput.innerText = `Captured: "${e.results[0][0].transcript}"`; };
-        }
-
-        // Card Clicks Simulation
-        document.getElementById('btn-simulate').addEventListener('click', () => {
-            document.getElementById('ai-console').innerText = `[Simulating Call Overrides...]\nResult: SUCCESS.\nGas Estimate optimized via Arc Hooks.`;
-        });
-        document.getElementById('btn-audit').addEventListener('click', () => {
-            document.getElementById('ai-console').innerText = `[Scanning Bytecode...]\nSleuth Radar Verdict: SAFE.`;
-        });
-        document.getElementById('btn-cctp-bridge').addEventListener('click', () => { alert("Circle CCTP Attestation Initialized."); });
-        document.getElementById('btn-session-key').addEventListener('click', () => { alert("Session Key Activated."); });
-        document.getElementById('btn-yield-optimize').addEventListener('click', () => { alert("AI Yield Rebalancer actively sweeping protocols..."); });
-    </script>
-</body>
-</html>
+            rpcUrls: ['https://rpc-testnet.arcnetwork.io'], // টেস্টনেট আরপিসি ইউআরএল
+            blockExplorerUrls:
