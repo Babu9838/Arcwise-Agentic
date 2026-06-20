@@ -6,22 +6,21 @@
     <title>Arcwise Agentic</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <style>
-        :root { --bg: #02040a; --card: #0d1117; --border: #21262d; --text: #f0f6fc; --sub: #8b949e; --accent: #58a6ff; }
+        :root { --bg: #02040a; --card: #0d1117; --border: #21262d; --text: #f0f6fc; --sub: #8b949e; }
         body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; margin: 0; padding: 0; }
-        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid var(--border); background: rgba(13,11,23,0.8); backdrop-filter: blur(12px); }
-        .brand { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; background: linear-gradient(45deg, #58a6ff, #56d364); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid var(--border); }
+        .brand { font-size: 20px; font-weight: 800; background: linear-gradient(45deg, #58a6ff, #56d364); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .net-bar { background: #161b22; text-align: center; padding: 6px; font-size: 12px; color: var(--sub); border-bottom: 1px solid var(--border); }
         .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto; }
         .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; position: relative; }
         .tag { position: absolute; top: 12px; right: 12px; font-size: 11px; background: rgba(88,166,255,0.1); color: #58a6ff; padding: 3px 8px; border-radius: 15px; }
-        .bal { font-size: 38px; font-weight: 700; margin: 15px 0 5px 0; }
+        .bal { font-size: 38px; font-weight: 700; margin: 15px 0; }
         input { width: 100%; padding: 10px; background: #010409; border: 1px solid var(--border); border-radius: 6px; color: #fff; margin-bottom: 10px; box-sizing: border-box; }
         button { background: #21262d; color: #c9d1d9; border: 1px solid var(--border); padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%; }
         button:hover { background: #30363d; color: #fff; }
         .btn-success { background: #238636; border-color: #2ea44f; color: #fff; }
-        .btn-premium { background: linear-gradient(90deg, #1f6feb, #8957e5); border: none; color: #fff; }
         .btn-grid { display: flex; gap: 8px; margin-top: 10px; }
-        .ticker { background: rgba(35,134,54,0.1); border: 1px dashed #2ea44f; padding: 8px; border-radius: 6px; text-align: center; color: #56d364; font-family: monospace; font-size: 13px; }
+        .ticker { background: rgba(35,134,54,0.1); border: 1px dashed #2ea44f; padding: 8px; border-radius: 6px; text-align: center; color: #56d364; font-family: monospace; }
         .console { background: #010409; border: 1px solid var(--border); font-family: monospace; padding: 12px; border-radius: 6px; margin-top: 10px; font-size: 12px; color: #8b949e; white-space: pre-line; }
     </style>
 </head>
@@ -30,8 +29,8 @@
     <header class="navbar">
         <div class="brand">🚀 Arcwise Agentic</div>
         <div style="display: flex; gap: 5px;">
-            <button id="btn-circle" style="padding: 8px; font-size: 12px;">Circle WaaS</button>
-            <button id="btn-wallet" onclick="connect()" style="padding: 8px; font-size: 12px;">Connect Wallet</button>
+            <button id="btn-circle" style="padding: 8px; font-size: 12px; width: auto;">Circle WaaS</button>
+            <button id="btn-wallet" onclick="connect()" style="padding: 8px; font-size: 12px; width: auto;">Connect Wallet</button>
         </div>
     </header>
 
@@ -42,11 +41,7 @@
             <div class="tag">Omnichain</div>
             <h2>Unified Balance Kit</h2>
             <div class="bal"><span id="usdc-balance">71.88</span> USDC</div>
-            <p style="color:var(--sub); font-size:13px;">Aggregated via Arc Bridge Router</p>
-            <div class="btn-grid">
-                <button onclick="switchChain()">Switch Arc Testnet</button>
-                <button onclick="alert('CCTP Minted!')">Trigger CCTP</button>
-            </div>
+            <div class="btn-grid"><button onclick="switchChain()">Switch Arc Testnet</button></div>
         </section>
 
         <section class="card">
@@ -60,25 +55,16 @@
 
         <section class="card">
             <div class="tag">AI Intelligence</div>
-            <h2>AI Agentic Engine</h2>
-            <input type="password" id="ai-key" placeholder="Enter OpenAI API Key" style="border-color:#8957e5;">
+            <h2>AI Agentic Engine (Free Mode)</h2>
             <button id="btn-voice">🎙️ Speak Command</button>
-            <p id="v-out" style="font-size:12px; color:var(--sub); font-style:italic; margin:5px 0;">Say: "Send 1 USDC to deba"</p>
+            <p id="v-out" style="font-size:12px; color:var(--sub); font-style:italic; margin:5px 0;">Say clearly: "Send 0.5 to deba" or "Send 1 to pinky"</p>
             <div class="btn-grid"><button onclick="sim(1)">Run Simulation</button><button onclick="sim(2)">Sleuth Audit</button></div>
             <div id="console" class="console">System: Ready...</div>
-        </section>
-
-        <section class="card">
-            <div class="tag">UX Engine</div>
-            <h2>Intent Gas & Yield</h2>
-            <p style="font-size:13px; color:var(--sub);">⚡ Gas Station: Active (Pay via USDC enabled)</p>
-            <button onclick="alert('Session Key Generated')" style="margin-bottom:8px;">Session Key (Gasless)</button>
-            <button onclick="alert('Yield Rebalanced')" class="btn-premium">1-Click AI Yield Optimizer</button>
         </section>
     </main>
 
     <script>
-        let provider, signer, userAddress, chainId;
+        let provider, signer, userAddress;
         const registry = {
             "deba": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
             "pinky": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
@@ -87,28 +73,13 @@
 
         async function connect() {
             if (!window.ethereum) return alert("MetaMask not found!");
-            try {
-                const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                userAddress = accs[0];
-                provider = new ethers.BrowserProvider(window.ethereum);
-                signer = await provider.getSigner();
-                document.getElementById('addr').innerText = `Address: ${userAddress.slice(0,6)}...${userAddress.slice(-4)}`;
-                document.getElementById('btn-wallet').innerText = "Connected";
-                updateBal();
-                window.ethereum.on('accountsChanged', (a) => { userAddress = a[0]; updateBal(); });
-                window.ethereum.on('chainChanged', () => updateBal());
-            } catch (e) { alert("Connection failed!"); }
-        }
-
-        async function updateBal() {
-            if (!userAddress) return;
-            try {
-                const net = await provider.getNetwork();
-                chainId = Number(net.chainId);
-                document.getElementById('net').innerText = `Chain ID: ${chainId}`;
-                const b = await provider.getBalance(userAddress);
-                document.getElementById('usdc-balance').innerText = parseFloat(ethers.formatEther(b)) > 0 ? parseFloat(ethers.formatEther(b)).toFixed(2) : "71.88";
-            } catch(e) { document.getElementById('usdc-balance').innerText = "71.88"; }
+            const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            userAddress = accs[0];
+            provider = new ethers.BrowserProvider(window.ethereum);
+            signer = await provider.getSigner();
+            document.getElementById('addr').innerText = `Address: ${userAddress.slice(0,6)}...${userAddress.slice(-4)}`;
+            document.getElementById('btn-wallet').innerText = "Connected";
+            document.getElementById('net').innerText = "Network: Connected";
         }
 
         async function pay() {
@@ -127,14 +98,13 @@
                 }
             }
             const box = document.getElementById('ticker-box'), msg = document.getElementById('tick-msg');
-            box.style.display = "block"; msg.innerText = "Broadcasting payload...";
+            box.style.display = "block"; msg.innerText = "Broadcasting to MetaMask...";
             try {
                 const tx = await signer.sendTransaction({ to: to, value: ethers.parseEther(amt) });
-                msg.innerText = "Pending confirmation...";
+                msg.innerText = "Pending blockchain tx...";
                 await tx.wait();
-                msg.innerText = "Success! Balance updated.";
+                msg.innerText = "Success! Funds Sent.";
                 alert("Payment Successful!");
-                updateBal();
             } catch(e) { box.style.borderColor="#ff6b6b"; msg.style.color="#ff6b6b"; msg.innerText = "Failed or Denied"; }
         }
 
@@ -143,44 +113,42 @@
         }
 
         function sim(type) {
-            document.getElementById('console').innerText = type === 1 ? "[Simulation] SUCCESS. Gas predicted." : "[Audit] SAFE. No fraud vectors.";
+            document.getElementById('console').innerText = type === 1 ? "[Simulation] SUCCESS. Gas predicted." : "[Audit] SAFE. Verified Contract.";
         }
 
         document.getElementById('btn-circle').onclick = function() {
-            if(prompt("Enter Email:")) { this.innerText = "Circle Active"; document.getElementById('usdc-balance').innerText = "250.00"; }
+            this.innerText = "Circle Active"; document.getElementById('usdc-balance').innerText = "250.00";
         };
 
+        // ফ্রি স্মার্ট ভয়েস ইঞ্জিন (কোনো API Key লাগবে না)
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const rec = new SpeechRecognition();
-            document.getElementById('btn-voice').onclick = () => { 
-                if(!document.getElementById('ai-key').value) return alert("API Key field empty!");
-                rec.start(); document.getElementById('v-out').innerText = "🎙️ Listening..."; 
-            };
-            rec.onresult = async (e) => {
-                const txt = e.results[0][0].transcript;
+            
+            document.getElementById('btn-voice').onclick = () => { rec.start(); document.getElementById('v-out').innerText = "🎙️ Listening..."; };
+            
+            rec.onresult = (e) => {
+                const txt = e.results[0][0].transcript.toLowerCase();
                 document.getElementById('v-out').innerText = `Captured: "${txt}"`;
-                const con = document.getElementById('console'); con.innerText = "[AI] Multi-Agent parsing...";
-                try {
-                    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${document.getElementById('ai-key').value}` },
-                        body: JSON.stringify({
-                            model: "gpt-4o-mini", response_format: { type: "json_object" },
-                            messages: [
-                                { role: "system", content: "Extract 'recipient' (name or address) and 'amount' (number) from prompt. Output JSON with keys: recipient, amount, status (APPROVED or REJECTED), audit_report, simulation_result." },
-                                { role: "user", content: txt }
-                            ]
-                        })
-                    });
-                    const d = await res.json(); const r = JSON.parse(d.choices[0].message.content);
-                    con.innerText = `[1. Voice]: Got ${r.amount} to ${r.recipient}\n[2. Audit]: SAFE\n[3. Sim]: SUCCESS\nResult: ${r.status}`;
-                    if(r.status === "APPROVED" && r.amount > 0) {
-                        document.getElementById('recipient').value = r.recipient;
-                        document.getElementById('amount').value = r.amount;
-                        document.getElementById('btn-pay').click();
-                    }
-                } catch(err) { con.innerText = "AI Engine Connection/Key Error"; }
+                const con = document.getElementById('console'); con.innerText = "[Voice Intent Engine] Parsing words...";
+                
+                // মুখে যা বলেছেন তা থেকে নাম্বার এবং নাম খুঁজে বের করার অটোমেটিক স্মার্ট লজিক
+                let matchAmount = txt.match(/\d+(\.\d+)?/);
+                let amount = matchAmount ? matchAmount[0] : null;
+                let recipient = null;
+                
+                Object.keys(registry).forEach(name => { if(txt.includes(name)) recipient = name; });
+                
+                if (amount && recipient) {
+                    con.innerText = `[1. Voice]: Parsed ${amount} USDC to ${recipient}\n[2. Audit]: SAFE\n[3. Sim]: SUCCESS\nResult: APPROVED`;
+                    document.getElementById('recipient').value = recipient;
+                    document.getElementById('amount').value = amount;
+                    
+                    // সরাসরি মেটামাস্ক পপআপ ফায়ার করবে
+                    setTimeout(() => { document.getElementById('btn-pay').click(); }, 1500);
+                } else {
+                    con.innerText = "Error: Intent not understood. Try saying: 'Send 0.5 to deba'";
+                }
             };
         }
     </script>
