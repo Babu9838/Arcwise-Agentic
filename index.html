@@ -27,7 +27,7 @@
             padding: 0;
         }
 
-        /* --- 100% CRYSTAL CLEAR LOGO & NAVBAR --- */
+        /* --- CRYSTAL CLEAR FIXED LOGO & NAVBAR --- */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -44,30 +44,33 @@
             gap: 16px; 
         }
 
-        /* Optimized box container preventing compression artifacts */
+        /* 
+           লোগোটি ফেটে যাওয়া রোধ করতে বক্স কন্টেইনারের সাইজ বাড়ানো হয়েছে।
+           ইমেজ অরিজিনাল সাইজ বড় থাকলে এটি ব্রাউজারের ক্রাশ বা ব্লার হওয়া আটকাবে।
+        */
         .logo-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 50px;  /* Incremented size for visual clarity */
-            height: 50px;
+            width: 56px;  
+            height: 56px;
             border-radius: 12px;
             background: #0d1117; 
-            border: 1px solid rgba(88, 166, 255, 0.25);
-            box-shadow: 0 0 15px rgba(88, 166, 255, 0.2);
+            border: 1px solid rgba(88, 166, 255, 0.3);
+            box-shadow: 0 0 15px rgba(88, 166, 255, 0.25);
+            overflow: hidden;
         }
 
         .app-logo {
             width: 100%;
             height: 100%;
-            object-fit: fill; /* Switches from contain to fill for complete vector pixel tracking */
+            object-fit: cover; /* ইমেজ টেনে লম্বা হওয়া বন্ধ করবে */
             
-            /* Anti-blur and ultra-sharp contrast filters */
+            /* ব্রাউজারের অটোমেটিক ব্লারিং বা স্মুথিং ফিল্টার সম্পূর্ণ বন্ধ করার জন্য */
             image-rendering: -webkit-optimize-contrast; 
             image-rendering: -moz-crisp-edges;
-            image-rendering: pixelated;
+            image-rendering: o-crisp-edges;
             image-rendering: crisp-edges;
-            interpolation-mode: highest-quality; /* Engine specification for deep clear scaling */
         }
 
         .logo-text {
@@ -213,11 +216,10 @@
 </head>
 <body>
 
-    <!-- Header Navigation Bar -->
+    <!-- Header Navbar -->
     <header class="navbar">
         <div class="brand-container">
             <div class="logo-wrapper">
-                <!-- Using verbatim source registration for crisp image alignment -->
                 <img src="1000227687.jpg" alt="Arcwise Logo" class="app-logo">
             </div>
             <div class="logo-text">Arcwise Agentic</div>
@@ -235,7 +237,7 @@
 
     <main class="dashboard-container">
         
-        <!-- MODULE 1: Arc Unified Balance Kit & CCTP -->
+        <!-- MODULE 1: Arc Unified Balance Kit -->
         <section class="card balance-card">
             <div class="card-tag">Omnichain</div>
             <h2>Unified Balance Kit</h2>
@@ -247,7 +249,7 @@
             </div>
         </section>
 
-        <!-- MODULE 2: USDC Streaming & Round-ups -->
+        <!-- MODULE 2: USDC Streaming -->
         <section class="card streaming-card">
             <div class="card-tag">DeFi Stream</div>
             <h2>USDC Micro-payments</h2>
@@ -267,18 +269,16 @@
             </div>
         </section>
 
-        <!-- MODULE 3: AI Agent Layer (Voice & Simulator) -->
+        <!-- MODULE 3: AI Agentic Engine -->
         <section class="card ai-card">
             <div class="card-tag">AI Intelligence</div>
             <h2>AI Agentic Engine</h2>
             
-            <!-- Voice Input -->
             <div class="voice-box">
                 <button id="btn-voice-command">🎙️ Speak Command (Voice Agent)</button>
                 <p id="voice-output" class="subtext" style="margin-top: 10px; font-style: italic;">Click and say: "Send 10 USDC to 0x..."</p>
             </div>
             
-            <!-- Simulator & Fraud Radar -->
             <div class="ai-tools">
                 <h3>Pre-Execution "What-If" Simulator & Sleuth</h3>
                 <input type="text" id="target-contract" placeholder="Target Smart Contract Address">
@@ -290,7 +290,7 @@
             </div>
         </section>
 
-        <!-- MODULE 4: Gas Abstraction & Session Keys -->
+        <!-- MODULE 4: Gas Abstraction -->
         <section class="card defi-card">
             <div class="card-tag">UX Engine</div>
             <h2>Intent-Based Gas & Yield</h2>
@@ -301,12 +301,11 @@
 
     </main>
 
-    <!-- Core Business Logic Execution Layer -->
     <script>
-        let provider, signer, userAddress;
+        // JS Core Web3 UI Logic 
+        let provider, userAddress;
         let streamInterval;
         let totalStreamed = 0;
-
         const ARC_CHAIN_ID = '0x1F4'; 
         
         document.getElementById('btn-connect-wallet').addEventListener('click', async () => {
@@ -315,138 +314,63 @@
                     provider = new ethers.BrowserProvider(window.ethereum);
                     const accounts = await provider.send("eth_requestAccounts", []);
                     userAddress = accounts[0];
-                    
                     document.getElementById('wallet-address').innerText = `Address: ${userAddress.substring(0,6)}...${userAddress.substring(38)}`;
                     document.getElementById('btn-connect-wallet').innerText = "Connected";
-                    
                     const network = await provider.getNetwork();
                     document.getElementById('network-display').innerText = `Network: Chain ID ${network.chainId}`;
-                    
                     const balance = await provider.getBalance(userAddress);
                     document.getElementById('usdc-balance').innerText = parseFloat(ethers.formatEther(balance)).toFixed(2);
-                    
-                } catch (error) {
-                    console.error(error);
-                    alert("Wallet connection rejected.");
-                }
-            } else {
-                alert("MetaMask not found! Please use a Web3 enabled browser.");
-            }
+                } catch (error) { console.error(error); }
+            } else { alert("MetaMask not found!"); }
         });
 
         document.getElementById('btn-switch-arc').addEventListener('click', async () => {
             if (!window.ethereum) return alert("Connect wallet first!");
             try {
-                await window.ethereum.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: ARC_CHAIN_ID }],
-                });
+                await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: ARC_CHAIN_ID }] });
                 document.getElementById('network-display').innerText = "Network: Arc Mainnet";
-            } catch (switchError) {
-                if (switchError.code === 4902) {
-                    try {
-                        await window.ethereum.request({
-                            method: 'wallet_addEthereumChain',
-                            params: [{
-                                chainId: ARC_CHAIN_ID,
-                                chainName: 'Arc Network',
-                                nativeCurrency: { name: 'Arc Token', symbol: 'ARC', decimals: 18 },
-                                rpcUrls: ['https://rpc.arcnetwork.io'], 
-                                blockExplorerUrls: ['https://explorer.arcnetwork.io']
-                            }],
-                        });
-                    } catch (addError) {
-                        alert("Failed to add Arc Network.");
-                    }
-                }
-            }
+            } catch (x) { console.error(x); }
         });
 
         document.getElementById('btn-circle-login').addEventListener('click', () => {
-            const email = prompt("Enter your Email for Circle Programmable Wallet Onboarding:");
+            const email = prompt("Enter your Email for Circle WaaS Onboarding:");
             if(email) {
                 document.getElementById('btn-circle-login').innerText = "Circle: Connected";
                 document.getElementById('wallet-address').innerText = `Circle Wallet: 0xCrcl_${email.substring(0,3)}...`
                 document.getElementById('usdc-balance').innerText = "250.00"; 
-                alert(`Circle WaaS Initialization Successful! Programmatic Account created for ${email}`);
             }
         });
 
         document.getElementById('btn-start-stream').addEventListener('click', () => {
             const recipient = document.getElementById('stream-recipient').value;
             const rate = parseFloat(document.getElementById('stream-rate').value);
-
-            if (!recipient || isNaN(rate)) {
-                return alert("Please enter a valid recipient address and flow rate!");
-            }
-
+            if (!recipient || isNaN(rate)) return alert("Enter valid inputs!");
             if (streamInterval) clearInterval(streamInterval); 
-
             document.getElementById('live-stream-ticker').style.display = 'block';
-            
             streamInterval = setInterval(() => {
                 totalStreamed += rate;
                 document.getElementById('streamed-amount').innerText = totalStreamed.toFixed(4);
             }, 1000);
-            
-            alert(`USDC Real-time Stream Started to ${recipient} at ${rate} USDC/sec.`);
         });
 
         const voiceBtn = document.getElementById('btn-voice-command');
         const voiceOutput = document.getElementById('voice-output');
-
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.lang = 'en-US';
-
-            voiceBtn.addEventListener('click', () => {
-                recognition.start();
-                voiceOutput.innerText = "🎙️ Listening to Intent Layer...";
-            });
-
-            recognition.onresult = (event) => {
-                const textResult = event.results[0][0].transcript;
-                voiceOutput.innerText = `Captured: "${textResult}"`;
-                
-                if (textResult.toLowerCase().includes("send")) {
-                    const words = textResult.split(" ");
-                    const amount = words.find(w => !isNaN(w)) || "X";
-                    alert(`Arcwise Agentic parsed action: [TRANSFER] | Asset: [USDC] | Amount: [${amount}]. Automated payload ready for gasless signature.`);
-                } else {
-                    alert(`Arcwise Agentic Registry analyzed: "${textResult}". Searching Domain Abstraction address books...`);
-                }
-            };
-        } else {
-            voiceBtn.innerText = "Voice Agent Unsupported in this Browser";
+            voiceBtn.addEventListener('click', () => { recognition.start(); voiceOutput.innerText = "🎙️ Listening..."; });
+            recognition.onresult = (e) => { voiceOutput.innerText = `Captured: "${e.results[0][0].transcript}"`; };
         }
 
         document.getElementById('btn-simulate').addEventListener('click', () => {
-            const target = document.getElementById('target-contract').value || "0xUnknownTarget";
-            const consoleBox = document.getElementById('ai-console');
-            consoleBox.innerText = `[Simulating Call Overrides on ${target}...]\nResult: SUCCESS.\nState Changes: No malicious asset ownership modification detected. Gas Estimate optimized via Arc Hooks.`;
-            consoleBox.style.color = "#58a6ff";
+            document.getElementById('ai-console').innerText = `[Simulating Call Overrides...]\nResult: SUCCESS.`;
         });
-
         document.getElementById('btn-audit').addEventListener('click', () => {
-            const target = document.getElementById('target-contract').value || "0xUnknownTarget";
-            const consoleBox = document.getElementById('ai-console');
-            consoleBox.innerText = `[Scanning Bytecode for ${target}...]\nSleuth Radar Verdict: SAFE.\nReentrancy Guard: Enabled.\nOwnership Matrix: Verified Decentralized Governance.`;
-            consoleBox.style.color = "#56d364";
+            document.getElementById('ai-console').innerText = `[Scanning Bytecode...]\nSleuth Radar Verdict: SAFE.`;
         });
-
-        document.getElementById('btn-cctp-bridge').addEventListener('click', () => {
-            alert("Circle CCTP Attestation Initialized: Transmitting burn event logs from Ethereum Mainnet to Arc Network Minting Router...");
-        });
-
-        document.getElementById('btn-session-key').addEventListener('click', () => {
-            alert("Session Key Activated: Valid for 2 hours. Micro-transactions and streaming logic will now auto-approve with gasless signatures.");
-        });
-
-        document.getElementById('btn-yield-optimize').addEventListener('click', () => {
-            alert("AI Yield Rebalancer actively sweeping protocols...\nOptimizing liquidity routing into Arc High-Yield Vault (Current APY: 5.4%). Execution complete.");
-        });
+        document.getElementById('btn-cctp-bridge').addEventListener('click', () => { alert("Circle CCTP Initialized."); });
+        document.getElementById('btn-session-key').addEventListener('click', () => { alert("Session Key Activated."); });
+        document.getElementById('btn-yield-optimize').addEventListener('click', () => { alert("AI Yield Rebalancer active."); });
     </script>
 </body>
 </html>
