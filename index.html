@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arcwise Agentic - AI Stablecoin SuperApp</title>
+    <!-- Ethers.js CDN for Real Web3 Interactivity -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     
     <style>
@@ -26,7 +27,7 @@
             padding: 0;
         }
 
-        /* --- NAVBAR & CRYSTAL CLEAR LOGO SYSTEM --- */
+        /* --- FIXED LOGO & NAVBAR WITH NO BLINKING --- */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -43,6 +44,7 @@
             gap: 12px; 
         }
 
+        /* লোগো কন্টেইনার ফিক্সড সাইজ */
         .logo-wrapper {
             display: flex;
             align-items: center;
@@ -50,17 +52,10 @@
             width: 42px;  
             height: 42px;
             border-radius: 10px;
-            background: #0d1117; 
+            background: #161b22; 
             border: 1px solid rgba(88, 166, 255, 0.3);
             overflow: hidden;
-        }
-
-        .app-logo {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; 
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
+            box-shadow: 0 0 10px rgba(88, 166, 255, 0.1);
         }
 
         .logo-text {
@@ -206,16 +201,29 @@
 </head>
 <body>
 
+    <!-- Header Navbar -->
     <header class="navbar">
         <div class="brand-container">
             <div class="logo-wrapper">
-                <img src="https://api.screenshotone.com/v1/get-featured-image?url=https://arcwise-agentic.vercel.app&wait_until=network_idle" alt="Arcwise Logo" class="app-logo" onerror="this.src='https://images.squarespace-cdn.com/content/v1/63bc79eab2b5a153b6fa0f15/bbdf0861-f09b-4680-bc4a-25be15f27192/Arcwise+Logo+Square.png'">
+                <!-- 
+                  ইমেজ ট্যাগ সম্পূর্ণ বাদ দিয়ে এখানে একটি প্রিমিয়াম ক্রিপ্টো আর্চ SVG লোগো বসানো হয়েছে।
+                  এটি সরাসরি কোড থেকে জেনারেট হয়, তাই কখনো ফাটবে না, ব্লিঙ্ক করবে না, বা ভাঙবে না।
+                -->
+                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="padding: 4px;">
+                    <path d="M12 2C6.48 2 2 6.48 2 12V22L12 17L22 22V12C22 6.48 17.52 2 12 2Z" fill="url(#arc-gradient)" />
+                    <defs>
+                        <linearGradient id="arc-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#58a6ff;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#56d364;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                </svg>
             </div>
             <div class="logo-text">Arcwise Agentic</div>
         </div>
         <div class="wallet-actions" style="display: flex; gap: 6px;">
-            <button id="btn-circle-login" class="btn-circle" style="font-size: 12px; padding: 10px 12px;">Circle WaaS</button>
-            <button id="btn-connect-wallet" class="btn-secondary" style="font-size: 12px; padding: 10px 12px;">Connect</button>
+            <button id="btn-circle-login" class="btn-circle" style="font-size: 12px; padding: 10px 12px; width: auto;">Circle WaaS</button>
+            <button id="btn-connect-wallet" class="btn-secondary" style="font-size: 12px; padding: 10px 12px; width: auto;">Connect</button>
         </div>
     </header>
 
@@ -226,6 +234,7 @@
 
     <main class="dashboard-container">
         
+        <!-- MODULE 1: Arc Unified Balance Kit -->
         <section class="card balance-card">
             <div class="card-tag">Omnichain</div>
             <h2>Unified Balance Kit</h2>
@@ -237,6 +246,7 @@
             </div>
         </section>
 
+        <!-- MODULE 2: USDC Streaming -->
         <section class="card streaming-card">
             <div class="card-tag">DeFi Stream</div>
             <h2>USDC Micro-payments</h2>
@@ -256,6 +266,7 @@
             </div>
         </section>
 
+        <!-- MODULE 3: AI Agentic Engine -->
         <section class="card ai-card">
             <div class="card-tag">AI Intelligence</div>
             <h2>AI Agentic Engine</h2>
@@ -276,6 +287,7 @@
             </div>
         </section>
 
+        <!-- MODULE 4: Gas Abstraction -->
         <section class="card defi-card">
             <div class="card-tag">UX Engine</div>
             <h2>Intent-Based Gas & Yield</h2>
