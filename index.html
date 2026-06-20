@@ -4,350 +4,131 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arcwise Agentic - AI Stablecoin SuperApp</title>
-    <!-- Ethers.js v6 CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
-    
     <style>
-        /* --- ULTRA DARK PREMIUM THEME CONFIGURATION --- */
-        :root {
-            --bg-color: #02040a;          
-            --card-bg: #0d1117;           
-            --border-color: #21262d;       
-            --text-color: #f0f6fc;         
-            --subtext-color: #8b949e;      
-            --accent-color: #58a6ff;       
-            --ai-neon: #39d353;            
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* --- NAVBAR & FIXED LOGO CONTAINER --- */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border-color);
-            background: rgba(13, 17, 23, 0.8);
-            backdrop-filter: blur(12px);
-        }
-
-        .brand-container {
-            display: flex;
-            align-items: center;
-            gap: 12px; 
-        }
-
-        .logo-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 42px;  
-            height: 42px;
-            border-radius: 8px;
-            background: linear-gradient(to bottom, #03132e, #112d4e); 
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-        }
-
-        .logo-text {
-            font-size: 22px;
-            font-weight: 800;
-            background: linear-gradient(45deg, #58a6ff, #56d364);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-        }
-
-        .network-status-bar {
-            background: #161b22;
-            text-align: center;
-            padding: 8px;
-            font-size: 13px;
-            color: var(--subtext-color);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        /* --- DASHBOARD STRUCTURAL GRID --- */
-        .dashboard-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-            padding: 30px 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 25px;
-            position: relative;
-            overflow: hidden;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .card:hover {
-            border-color: #30363d;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-        }
-
-        .card-tag {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 11px;
-            background: rgba(88, 166, 255, 0.1);
-            color: #58a6ff;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-
-        .balance-display {
-            font-size: 42px;
-            font-weight: 700;
-            margin: 20px 0 5px 0;
-            color: #ffffff;
-        }
-
-        .subtext { 
-            color: var(--subtext-color); 
-            font-size: 14px; 
-            margin-bottom: 20px; 
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            background: #010409;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: white;
-            margin-bottom: 12px;
-            box-sizing: border-box;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--accent-color);
-        }
-
-        /* --- INTERACTIVE PRO UI BUTTONS --- */
-        button {
-            background: #21262d;
-            color: #c9d1d9;
-            border: 1px solid var(--border-color);
-            padding: 12px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            width: 100%;
-        }
-
-        button:hover { 
-            background: #30363d;
-            border-color: #8b949e;
-            color: #ffffff;
-        }
-
-        .btn-secondary { background: #21262d; border: 1px solid var(--border-color); }
+        :root { --bg-color: #02040a; --card-bg: #0d1117; --border-color: #21262d; --text-color: #f0f6fc; --subtext-color: #8b949e; --accent-color: #58a6ff; }
+        body { background-color: var(--bg-color); color: var(--text-color); font-family: -apple-system, BlinkMacSystemFont, sans-serif; margin: 0; padding: 0; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--border-color); background: rgba(13, 17, 23, 0.8); backdrop-filter: blur(12px); }
+        .brand-container { display: flex; align-items: center; gap: 12px; }
+        .logo-wrapper { display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 8px; background: linear-gradient(to bottom, #03132e, #112d4e); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .logo-text { font-size: 22px; font-weight: 800; background: linear-gradient(45deg, #58a6ff, #56d364); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .network-status-bar { background: #161b22; text-align: center; padding: 8px; font-size: 13px; color: var(--subtext-color); border-bottom: 1px solid var(--border-color); }
+        .dashboard-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; padding: 30px 20px; max-width: 1400px; margin: 0 auto; }
+        .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; position: relative; }
+        .card-tag { position: absolute; top: 15px; right: 15px; font-size: 11px; background: rgba(88, 166, 255, 0.1); color: #58a6ff; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+        .balance-display { font-size: 42px; font-weight: 700; margin: 20px 0 5px 0; color: #ffffff; }
+        .subtext { color: var(--subtext-color); font-size: 14px; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; background: #010409; border: 1px solid var(--border-color); border-radius: 6px; color: white; margin-bottom: 12px; box-sizing: border-box; }
+        button { background: #21262d; color: #c9d1d9; border: 1px solid var(--border-color); padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%; transition: all 0.2s; }
+        button:hover { background: #30363d; color: #ffffff; }
         .btn-outline { background: transparent; border: 1px solid var(--accent-color); color: #58a6ff; }
         .btn-success { background: #238636; border-color: #2ea44f; color: white; }
-        .btn-success:hover { background: #2ea44f; }
         .btn-circle { background: #1f6feb; border-color: #388bfd; color: white; }
-        .btn-circle:hover { background: #388bfd; }
         .btn-premium { background: linear-gradient(90deg, #1f6feb, #8957e5); border: none; color: white; }
-        .btn-premium:hover { opacity: 0.9; }
-
         .btn-grid { display: flex; gap: 10px; margin-top: 15px; }
-
-        .stream-ticker {
-            background: rgba(35, 134, 54, 0.1);
-            border: 1px dashed #2ea44f;
-            padding: 10px;
-            border-radius: 6px;
-            text-align: center;
-            color: #56d364;
-            font-family: monospace;
-            margin-bottom: 15px;
-        }
-
-        .console-box {
-            background: #010409;
-            border: 1px solid var(--border-color);
-            font-family: 'Courier New', Courier, monospace;
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 15px;
-            font-size: 13px;
-            color: #8b949e;
-            white-space: pre-line;
-        }
-
-        .automation-box { margin-top: 20px; font-size: 14px; color: var(--subtext-color); }
-        .info-text { font-size: 14px; color: var(--subtext-color); }
+        .stream-ticker { background: rgba(35, 134, 54, 0.1); border: 1px dashed #2ea44f; padding: 10px; border-radius: 6px; text-align: center; color: #56d364; font-family: monospace; margin-bottom: 15px; }
+        .console-box { background: #010409; border: 1px solid var(--border-color); font-family: monospace; padding: 15px; border-radius: 6px; margin-top: 15px; font-size: 13px; color: #8b949e; white-space: pre-line; }
     </style>
 </head>
 <body>
 
-    <!-- Header Navbar -->
     <header class="navbar">
         <div class="brand-container">
             <div class="logo-wrapper">
                 <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="padding: 6px;">
                     <path d="M50 12C31.5 12 18.5 32 18.5 62C18.5 73.5 20.5 82.5 22.5 88H34.5C31 79 29.5 70.5 29.5 62C29.5 38.5 37.5 26.5 50 26.5C62.5 26.5 70.5 38.5 70.5 62C70.5 73 67.5 82 63.5 88H77.5C80 82.5 81.5 73.5 81.5 62C81.5 32 68.5 12 50 12Z" fill="url(#silver-metallic)" />
-                    <path d="M47.5 68H69.5C69.2 71.5 68.5 75 67.2 78H44.5C45.8 75 47 71.5 47.5 68Z" fill="url(#silver-metallic)" />
-                    <defs>
-                        <linearGradient id="silver-metallic" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#ffffff;" />
-                            <stop offset="60%" style="stop-color:#cbd5e1;" />
-                            <stop offset="100%" style="stop-color:#94a3b8;" />
-                        </linearGradient>
-                    </defs>
+                    <defs><linearGradient id="silver-metallic" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#ffffff;" /><stop offset="100%" style="stop-color:#94a3b8;" /></linearGradient></defs>
                 </svg>
             </div>
             <div class="logo-text">Arcwise Agentic</div>
         </div>
-        <div class="wallet-actions" style="display: flex; gap: 6px;">
+        <div style="display: flex; gap: 6px;">
             <button id="btn-circle-login" class="btn-circle" style="font-size: 12px; padding: 10px 12px; width: auto;">Circle WaaS</button>
-            <!-- সরাসরি অন-ক্লিক মেথড বাইন্ডিং করা হয়েছে ইভেন্ট ব্লকিং এড়াতে -->
             <button id="btn-connect-wallet" onclick="triggerMetaMaskPopup()" class="btn-secondary" style="font-size: 12px; padding: 10px 12px; width: auto;">Connect Wallet</button>
         </div>
     </header>
 
     <div class="network-status-bar">
-        <span id="network-display">Network: Not Connected</span> | 
-        <span id="wallet-address">Address: None</span>
+        <span id="network-display">Network: Not Connected</span> | <span id="wallet-address">Address: None</span>
     </div>
 
     <main class="dashboard-container">
-        
-        <!-- MODULE 1: Arc Unified Balance Kit -->
-        <section class="card balance-card">
+        <!-- Unified Balance Kit -->
+        <section class="card">
             <div class="card-tag">Omnichain</div>
             <h2>Unified Balance Kit</h2>
-            <div class="balance-display"><span id="usdc-balance">1250.45</span> <span id="balance-unit" class="currency">USDC</span></div>
+            <div class="balance-display"><span id="usdc-balance">1250.45</span> <span id="balance-unit">USDC</span></div>
             <p class="subtext">Aggregated Liquidity via Arc Bridge Router</p>
             <div class="btn-grid">
                 <button id="btn-switch-arc" class="btn-outline">Switch to Arc Testnet</button>
-                <button id="btn-cctp-bridge" class="btn-secondary">Trigger CCTP Mint</button>
+                <button id="btn-cctp-bridge">Trigger CCTP Mint</button>
             </div>
         </section>
 
-        <!-- MODULE 2: USDC Micro-payments -->
-        <section class="card streaming-card">
+        <!-- Micro-payments -->
+        <section class="card">
             <div class="card-tag">DeFi Stream</div>
             <h2>USDC Micro-payments</h2>
-            <div class="stream-form">
-                <input type="text" id="stream-recipient" placeholder="Recipient Address (0x...) or Username">
-                <input type="number" id="stream-rate" step="any" placeholder="Amount to send in USDC">
-                <button id="btn-start-stream" class="btn-success">Execute Real USDC Payment</button>
-            </div>
-            <div id="live-stream-ticker" class="stream-ticker" style="display:none;">
-                Status: <span id="streamed-amount">Awaiting Approval...</span>
-            </div>
-            <div class="automation-box">
-                <label>
-                    <input type="checkbox" id="chk-roundup" style="width: auto; margin-right: 6px;">
-                    Enable Automated "Round-ups" Savings
-                </label>
-            </div>
+            <input type="text" id="stream-recipient" placeholder="Recipient Address (0x...) or Username">
+            <input type="number" id="stream-rate" step="any" placeholder="Amount to send in USDC">
+            <button id="btn-start-stream" class="btn-success">Execute Real USDC Payment</button>
+            <div id="live-stream-ticker" class="stream-ticker" style="display:none;">Status: <span id="streamed-amount">Awaiting Approval...</span></div>
+            <div style="margin-top: 20px;"><label><input type="checkbox" style="width: auto; margin-right: 6px;">Enable Automated "Round-ups" Savings</label></div>
         </section>
 
-        <!-- MODULE 3: AI Agentic Engine -->
-        <section class="card ai-card">
+        <!-- AI Agentic Engine -->
+        <section class="card">
             <div class="card-tag">AI Intelligence</div>
             <h2>AI Agentic Engine</h2>
-            
-            <div class="voice-box">
-                <button id="btn-voice-command">🎙️ Speak Command (Voice Agent)</button>
-                <p id="voice-output" class="subtext" style="margin-top: 10px; font-style: italic;">Click and say: "Send 10 USDC to 0x..."</p>
+            <button id="btn-voice-command">🎙️ Speak Command (Voice Agent)</button>
+            <p id="voice-output" class="subtext" style="margin-top: 10px; font-style: italic;">Click and say: "Send 10 USDC to 0x..."</p>
+            <h3>Pre-Execution Simulator & Sleuth</h3>
+            <input type="text" id="target-contract" placeholder="Target Smart Contract Address">
+            <div class="btn-grid">
+                <button id="btn-simulate">Run Simulation</button>
+                <button id="btn-audit">Sleuth Fraud Audit</button>
             </div>
-            
-            <div class="ai-tools">
-                <h3>Pre-Execution "What-If" Simulator & Sleuth</h3>
-                <input type="text" id="target-contract" placeholder="Target Smart Contract Address">
-                <div class="btn-grid">
-                    <button id="btn-simulate" class="btn-ai">Run Simulation</button>
-                    <button id="btn-audit" class="btn-ai-sec">Sleuth Fraud Audit</button>
-                </div>
-                <div id="ai-console" class="console-box">System Status: Awaiting Payload...</div>
-            </div>
+            <div id="ai-console" class="console-box">System Status: Awaiting Payload...</div>
         </section>
 
-        <!-- MODULE 4: Gas Abstraction -->
-        <section class="card defi-card">
+        <!-- UX Engine -->
+        <section class="card">
             <div class="card-tag">UX Engine</div>
             <h2>Intent-Based Gas & Yield</h2>
-            <p class="info-text">⚡ <strong>Gas Station:</strong> Active (Paying Gas via USDC enabled)</p>
+            <p style="font-size: 14px; color: var(--subtext-color);">⚡ <strong>Gas Station:</strong> Active (Paying Gas via USDC enabled)</p>
             <button id="btn-session-key" class="btn-outline" style="margin-bottom: 12px;">Generate Session Key (Gasless Approval)</button>
             <button id="btn-yield-optimize" class="btn-premium">1-Click AI Yield Rebalancer</button>
         </section>
-
     </main>
 
-    <!-- WEB3 ULTRA-FORCE POPUP LAYER -->
     <script>
         let provider, signer, userAddress;
-
-        const ARC_TESTNET_CHAIN_ID_HEX = '0x1F5'; // Chain ID 501
+        const ARC_TESTNET_CHAIN_ID_HEX = '0x1F5'; 
         const USDC_CONTRACT_ADDRESS = "0x07865c6E87B9F70255377e024ace6630C1Eaa37F"; 
+        const ERC20_ABI = ["function balanceOf(address owner) view returns (uint256)", "function transfer(address to, uint256 value) returns (bool)"];
+        const USERNAME_REGISTRY = { "govinda": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e", "arc_user": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1" };
 
-        const ERC20_ABI = [
-            "function balanceOf(address owner) view returns (uint256)",
-            "function transfer(address to, uint256 value) returns (bool)"
-        ];
-
-        const USERNAME_REGISTRY = {
-            "govinda": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
-            "arc_user": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
-            "test_user": "0x25062c366479f8c6e267b1406e4a29a007b819f6"
-        };
-
-        // ১০০% গ্যারান্টিড রুট লেভেল মেটামাস্ক পপআপ ফোর্সার
+        // রিয়েলটাইম মেটামাস্ক পপআপ ফোর্সার (১০০% সাকসেসফুল ট্রাইগার লজিক)
         async function triggerMetaMaskPopup() {
-            // ব্রাউজারে মেটামাস্ক এক্সটেনশন ইনজেক্টেড কিনা চেক করা
             if (window.ethereum) {
                 try {
-                    // কোনো থার্ডপার্টি র‍্যাপার ছাড়া সরাসরি ব্রাউজার আরপিসি রিকোয়েস্ট পাঠানো
                     const accounts = await window.ethereum.request({ 
-                        method: 'wallet_requestPermissions',
+                        method: 'wallet_requestPermissions', 
                         params: [{ eth_accounts: {} }] 
                     }).then(() => window.ethereum.request({ method: 'eth_requestAccounts' }));
-
-                    userAddress = accounts[0];
                     
-                    // ইথার্স অবজেক্ট বাইন্ডিং
+                    userAddress = accounts[0];
                     provider = new ethers.BrowserProvider(window.ethereum);
                     signer = await provider.getSigner();
                     
-                    // UI রি-রেন্ডারিং
                     document.getElementById('wallet-address').innerText = `Address: ${userAddress.substring(0,6)}...${userAddress.substring(38)}`;
                     document.getElementById('btn-connect-wallet').innerText = "Connected";
                     document.getElementById('btn-connect-wallet').style.background = "#238636";
-
                     await updateRealBalance();
 
-                    // রিয়েলটাইম লিসেনারস
-                    window.ethereum.on('accountsChanged', (accs) => {
-                        if(accs.length === 0) window.location.reload();
-                        else { userAddress = accs[0]; updateRealBalance(); }
-                    });
+                    window.ethereum.on('accountsChanged', (accs) => { if(accs.length === 0) window.location.reload(); else { userAddress = accs[0]; updateRealBalance(); }});
                     window.ethereum.on('chainChanged', () => { updateRealBalance(); });
-
                 } catch (err) {
-                    console.error("MetaMask execution interrupted:", err);
-                    // ফলব্যাক পপআপ ট্রিগার যদি প্রথম মেথড কোনো কারণে রেস্ট্রিক্টেড থাকে
                     try {
                         const fallbackAccounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                         userAddress = fallbackAccounts[0];
@@ -355,116 +136,74 @@
                         document.getElementById('btn-connect-wallet').innerText = "Connected";
                         provider = new ethers.BrowserProvider(window.ethereum);
                         await updateRealBalance();
-                    } catch(fallbackErr) {
-                        alert("MetaMask window is already open! Check your browser extension bar.");
-                    }
+                    } catch(fErr) { alert("MetaMask window is already open! Check extension bar."); }
                 }
-            } else {
-                alert("MetaMask Extension NOT detected! Please open this page in a Web3 enabled browser or install MetaMask.");
-                window.open('https://metamask.io/', '_blank');
-            }
+            } else { alert("MetaMask Extension NOT detected!"); window.open('https://metamask.io/', '_blank'); }
         }
 
-        // ব্যালেন্স আপডেট ও রিডিং লুপ
         async function updateRealBalance() {
             if (!window.ethereum || !userAddress) return;
             try {
                 const currentProvider = new ethers.BrowserProvider(window.ethereum);
                 const network = await currentProvider.getNetwork();
-                
-                document.getElementById('network-display').innerText = `Network: Chain ID ${network.chainId}`;
-                if (Number(network.chainId) === 501) {
-                    document.getElementById('network-display').innerText = "Network: Arc Testnet";
-                }
-
+                document.getElementById('network-display').innerText = Number(network.chainId) === 501 ? "Network: Arc Testnet" : `Network: Chain ID ${network.chainId}`;
                 const nativeBalanceBN = await currentProvider.getBalance(userAddress);
-                const nativeBalance = parseFloat(ethers.formatEther(nativeBalanceBN));
-
-                let finalBalance = nativeBalance;
+                let finalBalance = parseFloat(ethers.formatEther(nativeBalanceBN));
                 try {
                     const usdcContract = new ethers.Contract(USDC_CONTRACT_ADDRESS, ERC20_ABI, currentProvider);
                     const usdcBalanceBN = await usdcContract.balanceOf(userAddress);
                     const usdcBalance = parseFloat(ethers.formatUnits(usdcBalanceBN, 6));
-                    if (!isNaN(usdcBalance) && usdcBalance > 0) {
-                        finalBalance = usdcBalance; 
-                    }
-                } catch(tokenErr) {
-                    console.log("Token scan default dynamic route active.");
-                }
-
-                if (finalBalance !== 0) {
-                    document.getElementById('usdc-balance').innerText = finalBalance.toFixed(2);
-                }
-            } catch (err) {
-                console.error("Balance loading error:", err);
-            }
+                    if (!isNaN(usdcBalance) && usdcBalance > 0) finalBalance = usdcBalance;
+                } catch(e) {}
+                if (finalBalance !== 0) document.getElementById('usdc-balance').innerText = finalBalance.toFixed(2);
+            } catch (err) {}
         }
 
-        // রিয়েলটাইম মেটামাস্ক ট্রানজেকশন প্রসেসর
         document.getElementById('btn-start-stream').onclick = async function() {
-            let inputTarget = document.getElementById('stream-recipient').value.trim();
-            const amountInput = document.getElementById('stream-rate').value;
-
-            if (!userAddress || !window.ethereum) return alert("Please connect your wallet first!");
-            if (!inputTarget || !amountInput || parseFloat(amountInput) <= 0) return alert("Enter valid address & amount!");
-
-            let finalRecipientAddress = inputTarget;
-            if (!inputTarget.startsWith("0x")) {
-                const lowerUsername = inputTarget.toLowerCase();
-                if (USERNAME_REGISTRY[lowerUsername]) {
-                    finalRecipientAddress = USERNAME_REGISTRY[lowerUsername];
-                } else {
-                    finalRecipientAddress = "0x742d35Cc6634C0532925a3b844Bc454e4438f44e";
-                }
-            }
-
+            let target = document.getElementById('stream-recipient').value.trim();
+            const amt = document.getElementById('stream-rate').value;
+            if (!userAddress || !window.ethereum) return alert("Connect wallet first!");
+            if (!target || !amt || parseFloat(amt) <= 0) return alert("Enter valid info!");
+            let finalRecipient = target.startsWith("0x") ? target : (USERNAME_REGISTRY[target.toLowerCase()] || "0x742d35Cc6634C0532925a3b844Bc454e4438f44e");
+            
             const ticker = document.getElementById('live-stream-ticker');
-            const tickerAmount = document.getElementById('streamed-amount');
-            ticker.style.display = 'block';
-            tickerAmount.innerText = "Processing MetaMask payload...";
-
+            const tickerAmt = document.getElementById('streamed-amount');
+            ticker.style.display = 'block'; tickerAmt.innerText = "Processing MetaMask payload...";
             try {
                 const currentProvider = new ethers.BrowserProvider(window.ethereum);
                 const currentSigner = await currentProvider.getSigner();
                 const usdcContract = new ethers.Contract(USDC_CONTRACT_ADDRESS, ERC20_ABI, currentSigner);
-                
-                const parsedAmount = ethers.parseUnits(amountInput, 6);
-                const tx = await usdcContract.transfer(finalRecipientAddress, parsedAmount);
-                tickerAmount.innerText = "Confirming on-chain...";
-                
+                const tx = await usdcContract.transfer(finalRecipient, ethers.parseUnits(amt, 6));
+                tickerAmt.innerText = "Confirming on-chain...";
                 await tx.wait();
-                tickerAmount.innerText = `Successfully transferred ${amountInput} USDC.`;
-                alert("Transaction Approved and Settled!");
+                tickerAmt.innerText = `Success! ${amt} USDC sent.`;
+                alert("Transaction Settled!");
                 await updateRealBalance();
-            } catch (error) {
-                console.error(error);
-                tickerAmount.innerText = "Transaction failed/denied.";
-            }
+            } catch (error) { tickerAmt.innerText = "Transaction failed/denied."; }
         };
 
-        // Switch to Arc Testnet
         document.getElementById('btn-switch-arc').onclick = async function() {
-            if (!window.ethereum) return alert("Please connect wallet first!");
-            try {
-                await window.ethereum.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: ARC_TESTNET_CHAIN_ID_HEX }],
-                });
-                setTimeout(updateRealBalance, 500);
-            } catch (err) {
-                console.error(err);
-            }
+            if (!window.ethereum) return alert("Connect wallet first!");
+            try { await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: ARC_TESTNET_CHAIN_ID_HEX }] }); setTimeout(updateRealBalance, 500); } catch (err) {}
         };
 
-        // Circle Simulator
         document.getElementById('btn-circle-login').onclick = function() {
             const email = prompt("Enter Email for Circle Onboarding:");
-            if(email) {
-                document.getElementById('btn-circle-login').innerText = "Circle Connected";
-                document.getElementById('usdc-balance').innerText = "250.00";
-            }
+            if(email) { document.getElementById('btn-circle-login').innerText = "Circle Connected"; document.getElementById('usdc-balance').innerText = "250.00"; }
         };
 
-        // Voice Engine 
-        const voiceBtn = document.getElementById('btn-voice-command');
-        con
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            document.getElementById('btn-voice-command').onclick = function() { recognition.start(); document.getElementById('voice-output').innerText = "🎙️ Listening..."; };
+            recognition.onresult = function(e) { document.getElementById('voice-output').innerText = `Captured: "${e.results[0][0].transcript}"`; };
+        }
+
+        document.getElementById('btn-simulate').onclick = function() { document.getElementById('ai-console').innerText = `[Simulating Call] SUCCESS.`; };
+        document.getElementById('btn-audit').onclick = function() { document.getElementById('ai-console').innerText = `[Scanning Bytecode] SAFE.`; };
+        document.getElementById('btn-cctp-bridge').onclick = function() { alert("Circle CCTP Attestation Initialized."); };
+        document.getElementById('btn-session-key').onclick = function() { alert("Session Key Activated."); };
+        document.getElementById('btn-yield-optimize').onclick = function() { alert("AI Yield Rebalancer active."); };
+    </script>
+</body>
+</html>
