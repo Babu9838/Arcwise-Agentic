@@ -27,7 +27,7 @@
             padding: 0;
         }
 
-        /* --- FIXED LOGO & NAVBAR WITH NO BLINKING --- */
+        /* --- NAVBAR & FIXED LOGO CONTAINER --- */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -44,18 +44,18 @@
             gap: 12px; 
         }
 
-        /* লোগো কন্টেইনার ফিক্সড সাইজ */
+        /* লোগো ব্যাকগ্রাউন্ড ও সাইজ হুবহু ইমেজের মতো মেলানো হয়েছে */
         .logo-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
             width: 42px;  
             height: 42px;
-            border-radius: 10px;
-            background: #161b22; 
-            border: 1px solid rgba(88, 166, 255, 0.3);
+            border-radius: 8px;
+            background: linear-gradient(to bottom, #03132e, #112d4e); /* লোগো ইমেজের ডার্ক ব্লু গ্রেডিয়েন্ট ব্যাকগ্রাউন্ড */
+            border: 1px solid rgba(255, 255, 255, 0.1);
             overflow: hidden;
-            box-shadow: 0 0 10px rgba(88, 166, 255, 0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
 
         .logo-text {
@@ -206,15 +206,17 @@
         <div class="brand-container">
             <div class="logo-wrapper">
                 <!-- 
-                  ইমেজ ট্যাগ সম্পূর্ণ বাদ দিয়ে এখানে একটি প্রিমিয়াম ক্রিপ্টো আর্চ SVG লোগো বসানো হয়েছে।
-                  এটি সরাসরি কোড থেকে জেনারেট হয়, তাই কখনো ফাটবে না, ব্লিঙ্ক করবে না, বা ভাঙবে না।
+                  হুবহু 1000227687_2.jpg লোগোটির আর্চ শেপ ও সিলভার মেটালিক গ্রেডিয়েন্ট এখানে রি-ক্রিয়েট করা হয়েছে।
+                  এটি কোড জেনারেটেড কোয়ালিটি, তাই ফাইল মিসিং বা ব্লিংকিং-এর কোনো সুযোগ নেই।
                 -->
-                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="padding: 4px;">
-                    <path d="M12 2C6.48 2 2 6.48 2 12V22L12 17L22 22V12C22 6.48 17.52 2 12 2Z" fill="url(#arc-gradient)" />
+                <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="padding: 6px;">
+                    <path d="M50 12C31.5 12 18.5 32 18.5 62C18.5 73.5 20.5 82.5 22.5 88H34.5C31 79 29.5 70.5 29.5 62C29.5 38.5 37.5 26.5 50 26.5C62.5 26.5 70.5 38.5 70.5 62C70.5 73 67.5 82 63.5 88H77.5C80 82.5 81.5 73.5 81.5 62C81.5 32 68.5 12 50 12Z" fill="url(#silver-metallic)" />
+                    <path d="M47.5 68H69.5C69.2 71.5 68.5 75 67.2 78H44.5C45.8 75 47 71.5 47.5 68Z" fill="url(#silver-metallic)" />
                     <defs>
-                        <linearGradient id="arc-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#58a6ff;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#56d364;stop-opacity:1" />
+                        <linearGradient id="silver-metallic" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ffffff;" />
+                            <stop offset="60%" style="stop-color:#cbd5e1;" />
+                            <stop offset="100%" style="stop-color:#94a3b8;" />
                         </linearGradient>
                     </defs>
                 </svg>
