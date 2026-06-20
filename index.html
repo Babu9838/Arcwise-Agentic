@@ -27,7 +27,7 @@
             padding: 0;
         }
 
-        /* --- HIGH-CLARITY LOGO & NAVBAR ADJUSTMENTS --- */
+        /* --- 100% CRYSTAL CLEAR LOGO & NAVBAR --- */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -41,33 +41,37 @@
         .brand-container {
             display: flex;
             align-items: center;
-            gap: 14px; /* Optimized space between logo and text */
+            gap: 16px; 
         }
 
+        /* Optimized box container preventing compression artifacts */
         .logo-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 44px;
-            height: 44px;
-            overflow: hidden;
-            border-radius: 10px;
-            background: #0d1117; /* Prevents background bleeding */
-            border: 1px solid rgba(88, 166, 255, 0.2);
-            box-shadow: 0 0 12px rgba(88, 166, 255, 0.15);
+            width: 50px;  /* Incremented size for visual clarity */
+            height: 50px;
+            border-radius: 12px;
+            background: #0d1117; 
+            border: 1px solid rgba(88, 166, 255, 0.25);
+            box-shadow: 0 0 15px rgba(88, 166, 255, 0.2);
         }
 
         .app-logo {
             width: 100%;
             height: 100%;
-            /* 'contain' ensures the logo vector scales mathematically without pixel degradation or stretching */
-            object-fit: contain; 
-            image-rendering: -webkit-optimize-contrast; /* Crisp pixel rendering for browsers */
+            object-fit: fill; /* Switches from contain to fill for complete vector pixel tracking */
+            
+            /* Anti-blur and ultra-sharp contrast filters */
+            image-rendering: -webkit-optimize-contrast; 
+            image-rendering: -moz-crisp-edges;
+            image-rendering: pixelated;
             image-rendering: crisp-edges;
+            interpolation-mode: highest-quality; /* Engine specification for deep clear scaling */
         }
 
         .logo-text {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 800;
             background: linear-gradient(45deg, #58a6ff, #56d364);
             -webkit-background-clip: text;
@@ -209,11 +213,11 @@
 </head>
 <body>
 
-    <!-- Header Navigation -->
+    <!-- Header Navigation Bar -->
     <header class="navbar">
-        <!-- High-Clarity Fixed Logo Matrix Setup -->
         <div class="brand-container">
             <div class="logo-wrapper">
+                <!-- Using verbatim source registration for crisp image alignment -->
                 <img src="1000227687.jpg" alt="Arcwise Logo" class="app-logo">
             </div>
             <div class="logo-text">Arcwise Agentic</div>
