@@ -4,18 +4,207 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arcwise Cortex - AI Stablecoin SuperApp</title>
-    <link rel="stylesheet" href="style.css">
     <!-- Ethers.js CDN for Real Web3 Interactivity -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+    
+    <style>
+        /* --- ULTRA DARK PREMIUM THEME CONFIGURATION --- */
+        :root {
+            --bg-color: #02040a;          /* Deep Carbon Pure Black */
+            --card-bg: #0d1117;           /* Slate Dark Card Background */
+            --border-color: #21262d;       /* Subtle Border Theme Line */
+            --text-color: #f0f6fc;         /* Crisp White Text */
+            --subtext-color: #8b949e;      /* Soft Muted Slate Gray */
+            --accent-color: #58a6ff;       /* Electric Web3 Blue */
+            --ai-neon: #39d353;            /* Neo Green Intelligence Pulse */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- LOGO & NAVBAR ADJUSTMENTS --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(13, 17, 23, 0.8);
+            backdrop-filter: blur(12px);
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 12px; /* Space between logo and text */
+        }
+
+        .app-logo {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 8px; /* Clean rounded edges for the image */
+            box-shadow: 0 0 10px rgba(88, 166, 255, 0.2); /* Soft ambient glow */
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #58a6ff, #56d364);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .network-status-bar {
+            background: #161b22;
+            text-align: center;
+            padding: 8px;
+            font-size: 13px;
+            color: var(--subtext-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* --- DASHBOARD STRUCTURAL GRID --- */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: #30363d;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 11px;
+            background: rgba(88, 166, 255, 0.1);
+            color: #58a6ff;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .balance-display {
+            font-size: 42px;
+            font-weight: 700;
+            margin: 20px 0 5px 0;
+            color: #ffffff;
+        }
+
+        .subtext { 
+            color: var(--subtext-color); 
+            font-size: 14px; 
+            margin-bottom: 20px; 
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            background: #010409;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: white;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        /* --- INTERACTIVE PRO UI BUTTONS --- */
+        button {
+            background: #21262d;
+            color: #c9d1d9;
+            border: 1px solid var(--border-color);
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        button:hover { 
+            background: #30363d;
+            border-color: #8b949e;
+            color: #ffffff;
+        }
+
+        .btn-secondary { background: #21262d; border: 1px solid var(--border-color); }
+        .btn-outline { background: transparent; border: 1px solid var(--accent-color); color: #58a6ff; }
+        .btn-success { background: #238636; border-color: #2ea44f; color: white; }
+        .btn-success:hover { background: #2ea44f; }
+        .btn-circle { background: #1f6feb; border-color: #388bfd; color: white; }
+        .btn-circle:hover { background: #388bfd; }
+        .btn-premium { background: linear-gradient(90deg, #1f6feb, #8957e5); border: none; color: white; }
+        .btn-premium:hover { opacity: 0.9; }
+
+        .btn-grid { display: flex; gap: 10px; margin-top: 15px; }
+
+        .stream-ticker {
+            background: rgba(35, 134, 54, 0.1);
+            border: 1px dashed #2ea44f;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            color: #56d364;
+            font-family: monospace;
+            margin-bottom: 15px;
+        }
+
+        .console-box {
+            background: #010409;
+            border: 1px solid var(--border-color);
+            font-family: 'Courier New', Courier, monospace;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #8b949e;
+            white-space: pre-line;
+        }
+
+        .automation-box { margin-top: 20px; font-size: 14px; color: var(--subtext-color); }
+        .info-text { font-size: 14px; color: var(--subtext-color); }
+    </style>
 </head>
 <body>
 
     <!-- Header Navigation -->
     <header class="navbar">
-        <div class="logo">Arcwise Cortex 🧠⚡</div>
+        <!-- Verified Branding Matrix with Verbatim File Allocation -->
+        <div class="brand-container">
+            <img src="1000227687.jpg" alt="Arcwise Logo" class="app-logo">
+            <div class="logo-text">Arcwise Cortex</div>
+        </div>
         <div class="wallet-actions">
-            <button id="btn-circle-login" class="btn-circle">Circle WaaS Login</button>
-            <button id="btn-connect-wallet" class="btn-secondary">Connect Wallet</button>
+            <button id="btn-circle-login" class="btn-circle" style="width: auto; margin-right: 8px;">Circle WaaS Login</button>
+            <button id="btn-connect-wallet" class="btn-secondary" style="width: auto;">Connect Wallet</button>
         </div>
     </header>
 
@@ -51,9 +240,8 @@
                 Streaming: <span id="streamed-amount">0.0000</span> USDC sent
             </div>
             <div class="automation-box">
-                <label class="switch-container">
-                    <input type="checkbox" id="chk-roundup">
-                    <span class="slider"></span>
+                <label>
+                    <input type="checkbox" id="chk-roundup" style="width: auto; margin-right: 6px;">
                     Enable Automated "Round-ups" Savings
                 </label>
             </div>
@@ -67,7 +255,7 @@
             <!-- Voice Input -->
             <div class="voice-box">
                 <button id="btn-voice-command">🎙️ Speak Command (Voice Agent)</button>
-                <p id="voice-output" class="interactive-text">Click and say: "Send 10 USDC to 0x..."</p>
+                <p id="voice-output" class="subtext" style="margin-top: 10px; font-style: italic;">Click and say: "Send 10 USDC to 0x..."</p>
             </div>
             
             <!-- Simulator & Fraud Radar -->
@@ -86,8 +274,8 @@
         <section class="card defi-card">
             <div class="card-tag">UX Engine</div>
             <h2>Intent-Based Gas & Yield</h2>
-            <p class="info-text">⚡ **Gas Station:** Active (Paying Gas via USDC enabled)</p>
-            <button id="btn-session-key" class="btn-outline">Generate Session Key (Gasless Approval)</button>
+            <p class="info-text">⚡ <strong>Gas Station:</strong> Active (Paying Gas via USDC enabled)</p>
+            <button id="btn-session-key" class="btn-outline" style="margin-bottom: 12px;">Generate Session Key (Gasless Approval)</button>
             <button id="btn-yield-optimize" class="btn-premium">1-Click AI Yield Rebalancer</button>
         </section>
 
@@ -99,8 +287,7 @@
         let streamInterval;
         let totalStreamed = 0;
 
-        // --- 1. Real EVM Wallet Connection & Arc Network Configurations ---
-        const ARC_CHAIN_ID = '0x1F4'; // Example Custom Chain ID for Arc (Change as per official specs)
+        const ARC_CHAIN_ID = '0x1F4'; 
         
         document.getElementById('btn-connect-wallet').addEventListener('click', async () => {
             if (window.ethereum) {
@@ -112,11 +299,9 @@
                     document.getElementById('wallet-address').innerText = `Address: ${userAddress.substring(0,6)}...${userAddress.substring(38)}`;
                     document.getElementById('btn-connect-wallet').innerText = "Connected";
                     
-                    // Fetch real network
                     const network = await provider.getNetwork();
                     document.getElementById('network-display').innerText = `Network: Chain ID ${network.chainId}`;
                     
-                    // Fetch Real Native Balance as mock placeholder for USDC
                     const balance = await provider.getBalance(userAddress);
                     document.getElementById('usdc-balance').innerText = parseFloat(ethers.formatEther(balance)).toFixed(2);
                     
@@ -129,7 +314,6 @@
             }
         });
 
-        // --- 2. Real Network Switch Logic (Arc Network) ---
         document.getElementById('btn-switch-arc').addEventListener('click', async () => {
             if (!window.ethereum) return alert("Connect wallet first!");
             try {
@@ -139,7 +323,6 @@
                 });
                 document.getElementById('network-display').innerText = "Network: Arc Mainnet";
             } catch (switchError) {
-                // If chain is not added to MetaMask, request to add it
                 if (switchError.code === 4902) {
                     try {
                         await window.ethereum.request({
@@ -148,7 +331,7 @@
                                 chainId: ARC_CHAIN_ID,
                                 chainName: 'Arc Network',
                                 nativeCurrency: { name: 'Arc Token', symbol: 'ARC', decimals: 18 },
-                                rpcUrls: ['https://rpc.arcnetwork.io'], // Fallback dynamic placeholder URL
+                                rpcUrls: ['https://rpc.arcnetwork.io'], 
                                 blockExplorerUrls: ['https://explorer.arcnetwork.io']
                             }],
                         });
@@ -159,18 +342,16 @@
             }
         });
 
-        // --- 3. Circle WaaS Interactive Mock Simulation ---
         document.getElementById('btn-circle-login').addEventListener('click', () => {
             const email = prompt("Enter your Email for Circle Programmable Wallet Onboarding:");
             if(email) {
                 document.getElementById('btn-circle-login').innerText = "Circle: Connected";
                 document.getElementById('wallet-address').innerText = `Circle Wallet: 0xCrcl_${email.substring(0,3)}...`
-                document.getElementById('usdc-balance').innerText = "250.00"; // Provisioning test USDC balance
+                document.getElementById('usdc-balance').innerText = "250.00"; 
                 alert(`Circle WaaS Initialization Successful! Programmatic Account created for ${email}`);
             }
         });
 
-        // --- 4. Real-Time USDC Streaming Core Logic ---
         document.getElementById('btn-start-stream').addEventListener('click', () => {
             const recipient = document.getElementById('stream-recipient').value;
             const rate = parseFloat(document.getElementById('stream-rate').value);
@@ -179,11 +360,10 @@
                 return alert("Please enter a valid recipient address and flow rate!");
             }
 
-            if (streamInterval) clearInterval(streamInterval); // Reset existing stream
+            if (streamInterval) clearInterval(streamInterval); 
 
             document.getElementById('live-stream-ticker').style.display = 'block';
             
-            // Execute real-time frontend linear calculation tick
             streamInterval = setInterval(() => {
                 totalStreamed += rate;
                 document.getElementById('streamed-amount').innerText = totalStreamed.toFixed(4);
@@ -192,7 +372,6 @@
             alert(`USDC Real-time Stream Started to ${recipient} at ${rate} USDC/sec.`);
         });
 
-        // --- 5. Real Web Speech AI Agent Integration ---
         const voiceBtn = document.getElementById('btn-voice-command');
         const voiceOutput = document.getElementById('voice-output');
 
@@ -211,7 +390,6 @@
                 const textResult = event.results[0][0].transcript;
                 voiceOutput.innerText = `Captured: "${textResult}"`;
                 
-                // Real Intent Parsing Logic
                 if (textResult.toLowerCase().includes("send")) {
                     const words = textResult.split(" ");
                     const amount = words.find(w => !isNaN(w)) || "X";
@@ -224,22 +402,20 @@
             voiceBtn.innerText = "Voice Agent Unsupported in this Browser";
         }
 
-        // --- 6. AI What-If Simulator & Sleuth Radar Engine ---
         document.getElementById('btn-simulate').addEventListener('click', () => {
             const target = document.getElementById('target-contract').value || "0xUnknownTarget";
             const consoleBox = document.getElementById('ai-console');
             consoleBox.innerText = `[Simulating Call Overrides on ${target}...]\nResult: SUCCESS.\nState Changes: No malicious asset ownership modification detected. Gas Estimate optimized via Arc Hooks.`;
-            consoleBox.style.color = "#a3e635";
+            consoleBox.style.color = "#58a6ff";
         });
 
         document.getElementById('btn-audit').addEventListener('click', () => {
             const target = document.getElementById('target-contract').value || "0xUnknownTarget";
             const consoleBox = document.getElementById('ai-console');
             consoleBox.innerText = `[Scanning Bytecode for ${target}...]\nSleuth Radar Verdict: SAFE.\nReentrancy Guard: Enabled.\nOwnership Matrix: Verified Decentralized Governance.`;
-            consoleBox.style.color = "#38bdf8";
+            consoleBox.style.color = "#56d364";
         });
 
-        // --- 7. CCTP, Round-ups & Session Keys Quick Interactivity ---
         document.getElementById('btn-cctp-bridge').addEventListener('click', () => {
             alert("Circle CCTP Attestation Initialized: Transmitting burn event logs from Ethereum Mainnet to Arc Network Minting Router...");
         });
@@ -253,5 +429,4 @@
         });
     </script>
 </body>
-  </html>
-  
+</html>
