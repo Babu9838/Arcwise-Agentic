@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arcwise Cortex - AI Stablecoin SuperApp</title>
+    <title>Arcwise Agentic - AI Stablecoin SuperApp</title>
     <!-- Ethers.js CDN for Real Web3 Interactivity -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     
@@ -27,7 +27,7 @@
             padding: 0;
         }
 
-        /* --- LOGO & NAVBAR ADJUSTMENTS --- */
+        /* --- HIGH-CLARITY LOGO & NAVBAR ADJUSTMENTS --- */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -41,15 +41,29 @@
         .brand-container {
             display: flex;
             align-items: center;
-            gap: 12px; /* Space between logo and text */
+            gap: 14px; /* Optimized space between logo and text */
+        }
+
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            overflow: hidden;
+            border-radius: 10px;
+            background: #0d1117; /* Prevents background bleeding */
+            border: 1px solid rgba(88, 166, 255, 0.2);
+            box-shadow: 0 0 12px rgba(88, 166, 255, 0.15);
         }
 
         .app-logo {
-            width: 40px;
-            height: 40px;
-            object-fit: cover;
-            border-radius: 8px; /* Clean rounded edges for the image */
-            box-shadow: 0 0 10px rgba(88, 166, 255, 0.2); /* Soft ambient glow */
+            width: 100%;
+            height: 100%;
+            /* 'contain' ensures the logo vector scales mathematically without pixel degradation or stretching */
+            object-fit: contain; 
+            image-rendering: -webkit-optimize-contrast; /* Crisp pixel rendering for browsers */
+            image-rendering: crisp-edges;
         }
 
         .logo-text {
@@ -197,10 +211,12 @@
 
     <!-- Header Navigation -->
     <header class="navbar">
-        <!-- Verified Branding Matrix with Verbatim File Allocation -->
+        <!-- High-Clarity Fixed Logo Matrix Setup -->
         <div class="brand-container">
-            <img src="1000227687.jpg" alt="Arcwise Logo" class="app-logo">
-            <div class="logo-text">Arcwise Cortex</div>
+            <div class="logo-wrapper">
+                <img src="1000227687.jpg" alt="Arcwise Logo" class="app-logo">
+            </div>
+            <div class="logo-text">Arcwise Agentic</div>
         </div>
         <div class="wallet-actions">
             <button id="btn-circle-login" class="btn-circle" style="width: auto; margin-right: 8px;">Circle WaaS Login</button>
@@ -247,10 +263,10 @@
             </div>
         </section>
 
-        <!-- MODULE 3: AI Cortex Layer (Voice & Simulator) -->
+        <!-- MODULE 3: AI Agent Layer (Voice & Simulator) -->
         <section class="card ai-card">
             <div class="card-tag">AI Intelligence</div>
-            <h2>AI Cortex Engine</h2>
+            <h2>AI Agentic Engine</h2>
             
             <!-- Voice Input -->
             <div class="voice-box">
@@ -393,9 +409,9 @@
                 if (textResult.toLowerCase().includes("send")) {
                     const words = textResult.split(" ");
                     const amount = words.find(w => !isNaN(w)) || "X";
-                    alert(`Arcwise AI parsed action: [TRANSFER] | Asset: [USDC] | Amount: [${amount}]. Automated payload ready for gasless signature.`);
+                    alert(`Arcwise Agentic parsed action: [TRANSFER] | Asset: [USDC] | Amount: [${amount}]. Automated payload ready for gasless signature.`);
                 } else {
-                    alert(`Arcwise AI Registry analyzed: "${textResult}". Searching Domain Abstraction address books...`);
+                    alert(`Arcwise Agentic Registry analyzed: "${textResult}". Searching Domain Abstraction address books...`);
                 }
             };
         } else {
