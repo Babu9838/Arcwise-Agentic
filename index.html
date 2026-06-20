@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arcwise Agentic - AI Stablecoin SuperApp</title>
-    <!-- Ethers.js CDN for Real Web3 Interactivity -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     
     <style>
@@ -201,14 +200,9 @@
 </head>
 <body>
 
-    <!-- Header Navbar -->
     <header class="navbar">
         <div class="brand-container">
             <div class="logo-wrapper">
-                <!-- 
-                  হুবহু 1000227687_2.jpg লোগোটির আর্চ শেপ ও সিলভার মেটালিক গ্রেডিয়েন্ট এখানে রি-ক্রিয়েট করা হয়েছে।
-                  এটি কোড জেনারেটেড কোয়ালিটি, তাই ফাইল মিসিং বা ব্লিংকিং-এর কোনো সুযোগ নেই।
-                -->
                 <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="padding: 6px;">
                     <path d="M50 12C31.5 12 18.5 32 18.5 62C18.5 73.5 20.5 82.5 22.5 88H34.5C31 79 29.5 70.5 29.5 62C29.5 38.5 37.5 26.5 50 26.5C62.5 26.5 70.5 38.5 70.5 62C70.5 73 67.5 82 63.5 88H77.5C80 82.5 81.5 73.5 81.5 62C81.5 32 68.5 12 50 12Z" fill="url(#silver-metallic)" />
                     <path d="M47.5 68H69.5C69.2 71.5 68.5 75 67.2 78H44.5C45.8 75 47 71.5 47.5 68Z" fill="url(#silver-metallic)" />
@@ -225,7 +219,7 @@
         </div>
         <div class="wallet-actions" style="display: flex; gap: 6px;">
             <button id="btn-circle-login" class="btn-circle" style="font-size: 12px; padding: 10px 12px; width: auto;">Circle WaaS</button>
-            <button id="btn-connect-wallet" class="btn-secondary" style="font-size: 12px; padding: 10px 12px; width: auto;">Connect</button>
+            <button id="btn-connect-wallet" class="btn-secondary" style="font-size: 12px; padding: 10px 12px; width: auto;">Connect Wallet</button>
         </div>
     </header>
 
@@ -236,19 +230,17 @@
 
     <main class="dashboard-container">
         
-        <!-- MODULE 1: Arc Unified Balance Kit -->
         <section class="card balance-card">
             <div class="card-tag">Omnichain</div>
             <h2>Unified Balance Kit</h2>
-            <div class="balance-display">$<span id="usdc-balance">0.00</span> <span class="currency">USDC</span></div>
+            <div class="balance-display"><span id="usdc-balance">0.0000</span> <span id="balance-unit" class="currency">ETH/USDC</span></div>
             <p class="subtext">Aggregated Liquidity via Arc Bridge Router</p>
             <div class="btn-grid">
-                <button id="btn-switch-arc">Switch to Arc Net</button>
-                <button id="btn-cctp-bridge" class="btn-outline">Trigger CCTP Mint</button>
+                <button id="btn-switch-arc" class="btn-outline">Switch to Arc Net</button>
+                <button id="btn-cctp-bridge" class="btn-secondary">Trigger CCTP Mint</button>
             </div>
         </section>
 
-        <!-- MODULE 2: USDC Streaming -->
         <section class="card streaming-card">
             <div class="card-tag">DeFi Stream</div>
             <h2>USDC Micro-payments</h2>
@@ -268,7 +260,6 @@
             </div>
         </section>
 
-        <!-- MODULE 3: AI Agentic Engine -->
         <section class="card ai-card">
             <div class="card-tag">AI Intelligence</div>
             <h2>AI Agentic Engine</h2>
@@ -289,7 +280,6 @@
             </div>
         </section>
 
-        <!-- MODULE 4: Gas Abstraction -->
         <section class="card defi-card">
             <div class="card-tag">UX Engine</div>
             <h2>Intent-Based Gas & Yield</h2>
@@ -301,74 +291,163 @@
     </main>
 
     <script>
-        let provider, userAddress;
+        let provider, signer, userAddress;
         let streamInterval;
         let totalStreamed = 0;
-        const ARC_CHAIN_ID = '0x1F4'; 
-        
+
+        // Arc Chain Configuration (হেক্সাডেসিমেল ফরম্যাট)
+        const ARC_CHAIN_ID_HEX = '0x1F4'; // Chain ID: 500
+        const ARC_CHAIN_PARAMS = {
+            chainId: ARC_CHAIN_ID_HEX,
+            chainName: 'Arc Network Mainnet',
+            nativeCurrency: {
+                name: 'Arc Native',
+                symbol: 'ARC',
+                decimals: 18
+            },
+            rpcUrls: ['https://rpc.arcnetwork.io'], // অফিশিয়াল আরপিসি ইউআরএল
+            blockExplorerUrls: ['https://explorer.arcnetwork.io']
+        };
+
+        // রিয়েল ব্যালেন্স আপডেট ফাংশন
+        async function updateRealBalance() {
+            if (!provider || !userAddress) return;
+            try {
+                // মেটামাস্ক থেকে ইউজারের লাইভ চেইনের আসল ব্যালেন্স নিয়ে আসা
+                const balance = await provider.getBalance(userAddress);
+                const ethBalance = ethers.formatEther(balance);
+                
+                // ড্যাশবোর্ডে রিয়েল ব্যালেন্স পুশ করা
+                document.getElementById('usdc-balance').innerText = parseFloat(ethBalance).toFixed(4);
+                
+                // বর্তমানে কোন চেইনে আছে তা চেক করে কারেন্সি কোড পরিবর্তন করা
+                const network = await provider.getNetwork();
+                if (network.chainId === 500n || network.chainId === 500) {
+                    document.getElementById('balance-unit').innerText = 'ARC';
+                } else {
+                    document.getElementById('balance-unit').innerText = 'ETH';
+                }
+            } catch (err) {
+                console.error("Balance update failed:", err);
+            }
+        }
+
+        // ওয়ালেট কানেক্ট লজিক
         document.getElementById('btn-connect-wallet').addEventListener('click', async () => {
             if (window.ethereum) {
                 try {
                     provider = new ethers.BrowserProvider(window.ethereum);
                     const accounts = await provider.send("eth_requestAccounts", []);
                     userAddress = accounts[0];
+                    
+                    // UI আপডেট
                     document.getElementById('wallet-address').innerText = `Address: ${userAddress.substring(0,6)}...${userAddress.substring(38)}`;
                     document.getElementById('btn-connect-wallet').innerText = "Connected";
+                    
                     const network = await provider.getNetwork();
                     document.getElementById('network-display').innerText = `Network: Chain ID ${network.chainId}`;
-                    const balance = await provider.getBalance(userAddress);
-                    document.getElementById('usdc-balance').innerText = parseFloat(ethers.formatEther(balance)).toFixed(2);
-                } catch (error) { console.error(error); }
-            } else { alert("MetaMask not found!"); }
-        });
+                    
+                    // আসল ব্যালেন্স ট্রিগার
+                    await updateRealBalance();
 
-        document.getElementById('btn-switch-arc').addEventListener('click', async () => {
-            if (!window.ethereum) return alert("Connect wallet first!");
-            try {
-                await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: ARC_CHAIN_ID }] });
-                document.getElementById('network-display').innerText = "Network: Arc Mainnet";
-            } catch (x) { console.error(x); }
-        });
+                    // চেইন পরিবর্তন হলে পেজ রিলোড বা অটো ব্যালেন্স আপডেট
+                    window.ethereum.on('chainChanged', () => { window.location.reload(); });
+                    window.ethereum.on('accountsChanged', () => { window.location.reload(); });
 
-        document.getElementById('btn-circle-login').addEventListener('click', () => {
-            const email = prompt("Enter your Email for Circle WaaS Onboarding:");
-            if(email) {
-                document.getElementById('btn-circle-login').innerText = "Circle: Connected";
-                document.getElementById('wallet-address').innerText = `Circle Wallet: 0xCrcl_${email.substring(0,3)}...`
-                document.getElementById('usdc-balance').innerText = "250.00"; 
+                } catch (error) {
+                    console.error(error);
+                    alert("Wallet connection rejected.");
+                }
+            } else {
+                alert("MetaMask not found! Please use a Web3 enabled browser.");
             }
         });
 
+        // "Switch to Arc Net" বাটন কার্যকর করা
+        document.getElementById('btn-switch-arc').addEventListener('click', async () => {
+            if (!window.ethereum) return alert("Please connect your wallet first!");
+            
+            try {
+                // প্রথমে মেটামাস্ক-কে আর্ক চেইনে সুইচ করার কমান্ড পাঠানো
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: ARC_CHAIN_ID_HEX }],
+                });
+                
+                document.getElementById('network-display').innerText = "Network: Arc Mainnet";
+                await updateRealBalance();
+                
+            } catch (switchError) {
+                // মেটামাস্কে যদি আর্ক নেটওয়ার্ক আগে থেকে অ্যাড করা না থাকে (Error 4902)
+                if (switchError.code === 4902) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [ARC_CHAIN_PARAMS],
+                        });
+                        document.getElementById('network-display').innerText = "Network: Arc Mainnet";
+                        await updateRealBalance();
+                    } catch (addError) {
+                        alert("User denied adding Arc Network.");
+                    }
+                } else {
+                    alert("Failed to switch network: " + switchError.message);
+                }
+            }
+        });
+
+        // Circle WaaS Dummy Simulation
+        document.getElementById('btn-circle-login').addEventListener('click', () => {
+            const email = prompt("Enter your Email for Circle Programmable Wallet Onboarding:");
+            if(email) {
+                document.getElementById('btn-circle-login').innerText = "Circle: Connected";
+                document.getElementById('wallet-address').innerText = `Circle Wallet: 0xCrcl_${email.substring(0,3)}...`;
+                document.getElementById('usdc-balance').innerText = "250.0000"; 
+                document.getElementById('balance-unit').innerText = 'USDC';
+            }
+        });
+
+        // USDC Streaming Simulation
         document.getElementById('btn-start-stream').addEventListener('click', () => {
             const recipient = document.getElementById('stream-recipient').value;
             const rate = parseFloat(document.getElementById('stream-rate').value);
-            if (!recipient || isNaN(rate)) return alert("Enter valid inputs!");
+
+            if (!recipient || isNaN(rate)) {
+                return alert("Please enter a valid recipient address and flow rate!");
+            }
+
             if (streamInterval) clearInterval(streamInterval); 
             document.getElementById('live-stream-ticker').style.display = 'block';
+            
             streamInterval = setInterval(() => {
                 totalStreamed += rate;
                 document.getElementById('streamed-amount').innerText = totalStreamed.toFixed(4);
             }, 1000);
         });
 
+        // Voice Command Simulator
         const voiceBtn = document.getElementById('btn-voice-command');
         const voiceOutput = document.getElementById('voice-output');
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
-            voiceBtn.addEventListener('click', () => { recognition.start(); voiceOutput.innerText = "🎙️ Listening..."; });
+            voiceBtn.addEventListener('click', () => {
+                recognition.start();
+                voiceOutput.innerText = "🎙️ Listening to Intent Layer...";
+            });
             recognition.onresult = (e) => { voiceOutput.innerText = `Captured: "${e.results[0][0].transcript}"`; };
         }
 
+        // Card Clicks Simulation
         document.getElementById('btn-simulate').addEventListener('click', () => {
-            document.getElementById('ai-console').innerText = `[Simulating Call Overrides...]\nResult: SUCCESS.`;
+            document.getElementById('ai-console').innerText = `[Simulating Call Overrides...]\nResult: SUCCESS.\nGas Estimate optimized via Arc Hooks.`;
         });
         document.getElementById('btn-audit').addEventListener('click', () => {
             document.getElementById('ai-console').innerText = `[Scanning Bytecode...]\nSleuth Radar Verdict: SAFE.`;
         });
-        document.getElementById('btn-cctp-bridge').addEventListener('click', () => { alert("Circle CCTP Initialized."); });
+        document.getElementById('btn-cctp-bridge').addEventListener('click', () => { alert("Circle CCTP Attestation Initialized."); });
         document.getElementById('btn-session-key').addEventListener('click', () => { alert("Session Key Activated."); });
-        document.getElementById('btn-yield-optimize').addEventListener('click', () => { alert("AI Yield Rebalancer active."); });
+        document.getElementById('btn-yield-optimize').addEventListener('click', () => { alert("AI Yield Rebalancer actively sweeping protocols..."); });
     </script>
 </body>
 </html>
