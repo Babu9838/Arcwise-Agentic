@@ -232,7 +232,7 @@
         <section class="card balance-card">
             <div class="card-tag">Omnichain</div>
             <h2>Unified Balance Kit</h2>
-            <div class="balance-display"><span id="usdc-balance">0.0000</span> <span id="balance-unit" class="currency">tARC</span></div>
+            <div class="balance-display"><span id="usdc-balance">0.00</span> <span id="balance-unit" class="currency">USDC</span></div>
             <p class="subtext">Aggregated Liquidity via Arc Bridge Router</p>
             <div class="btn-grid">
                 <button id="btn-switch-arc" class="btn-outline">Switch to Arc Testnet</button>
@@ -307,23 +307,22 @@
             blockExplorerUrls: ['https://testnet.arcscan.io']
         };
 
-        // রিয়েল ব্যালেন্স আপডেট ফাংশন
+        // রিয়েল ব্যালেন্স লজিক (USDC ফোকাসড)
         async function updateRealBalance() {
             if (!window.ethereum || !userAddress) return;
             try {
-                // ভ্যানিলা ইথার্স কানেকশন সেফগার্ড
                 const currentProvider = new ethers.BrowserProvider(window.ethereum);
                 const balance = await currentProvider.getBalance(userAddress);
-                const ethBalance = ethers.formatEther(balance);
+                const tokenBalance = ethers.formatEther(balance);
                 
-                document.getElementById('usdc-balance').innerText = parseFloat(ethBalance).toFixed(4);
+                // এখানে ডাটা যাই আসুক না কেন, তা USDC কারেন্সি ইউনিটে ফরম্যাট হয়ে স্ক্রিনে শো করবে
+                document.getElementById('usdc-balance').innerText = parseFloat(tokenBalance).toFixed(2);
+                document.getElementById('balance-unit').innerText = 'USDC';
                 
                 const network = await currentProvider.getNetwork();
                 if (Number(network.chainId) === 501) {
-                    document.getElementById('balance-unit').innerText = 'tARC';
                     document.getElementById('network-display').innerText = "Network: Arc Testnet";
                 } else {
-                    document.getElementById('balance-unit').innerText = 'ETH';
                     document.getElementById('network-display').innerText = `Network: Chain ID ${network.chainId}`;
                 }
             } catch (err) {
@@ -331,11 +330,10 @@
             }
         }
 
-        // ওয়ালেট কানেক্ট হ্যান্ডলার (ফিক্সড ও ডিজেবল-প্রুফ)
+        // ওয়ালেট কানেক্ট হ্যান্ডলার
         document.getElementById('btn-connect-wallet').addEventListener('click', async () => {
             if (typeof window.ethereum !== 'undefined') {
                 try {
-                    // ডাইরেক্ট RPC রিকোয়েস্ট মেটামাস্ক পপআপ ট্রাইগার করার জন্য
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                     userAddress = accounts[0];
                     
@@ -346,7 +344,6 @@
                     
                     await updateRealBalance();
 
-                    // রিয়েল-টাইম মেটামাস্ক লিসেনার ফিক্স
                     window.ethereum.on('chainChanged', () => { updateRealBalance(); });
                     window.ethereum.on('accountsChanged', (accs) => { 
                         if(accs.length === 0) window.location.reload();
@@ -361,7 +358,7 @@
             }
         });
 
-        // "Switch to Arc Testnet" বাটন ইভেন্ট (ফিক্সড)
+        // "Switch to Arc Testnet" বাটন ইভেন্ট
         document.getElementById('btn-switch-arc').addEventListener('click', async () => {
             if (!window.ethereum) return alert("Please connect your wallet first!");
             
@@ -394,7 +391,7 @@
             if(email) {
                 document.getElementById('btn-circle-login').innerText = "Circle: Connected";
                 document.getElementById('wallet-address').innerText = `Circle Wallet: 0xCrcl_${email.substring(0,3)}...`;
-                document.getElementById('usdc-balance').innerText = "250.0000"; 
+                document.getElementById('usdc-balance').innerText = "250.00"; 
                 document.getElementById('balance-unit').innerText = 'USDC';
             }
         });
