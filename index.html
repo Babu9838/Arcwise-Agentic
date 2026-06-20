@@ -248,7 +248,6 @@
             <div class="card-tag">DeFi Stream</div>
             <h2>USDC Micro-payments</h2>
             <div class="stream-form">
-                <!-- একক ইনপুট ফিল্ড যেখানে অ্যাড্রেস অথবা ইউজারনেম দুইটাই দেওয়া যাবে -->
                 <input type="text" id="stream-recipient" placeholder="Recipient Address (0x...) or Username">
                 <input type="number" id="stream-rate" step="any" placeholder="Amount to send in USDC">
                 <button id="btn-start-stream" class="btn-success">Execute Real USDC Payment</button>
@@ -296,7 +295,7 @@
 
     </main>
 
-    <!-- WEB3 REAL TRANSACTION LAYER WITH USERNAME RESOLVER -->
+    <!-- WEB3 INTERACTIVITY LAYER (WALLET CONNECT ACTIVATED) -->
     <script>
         let provider, signer, userAddress;
 
@@ -308,14 +307,14 @@
             "function transfer(address to, uint256 value) returns (bool)"
         ];
 
-        // ইউজারনেম লোকাল ডিকশনারি ম্যাপিং (অন-চেইন পেমেন্ট সফল করার জন্য)
+        // Username Registry Mapping
         const USERNAME_REGISTRY = {
             "govinda": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
             "arc_user": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
             "test_user": "0x25062c366479f8c6e267b1406e4a29a007b819f6"
         };
 
-        // রিয়েল ব্যালেন্স আপডেট লজিক
+        // Real Balance Tracker Logic
         async function updateRealBalance() {
             if (!window.ethereum || !userAddress) return;
             try {
@@ -356,21 +355,24 @@
             }
         }
 
-        // ওয়ালেট কানেক্ট হ্যান্ডলার
+        // WALLET CONNECT ENABLED & FIXED EVENT LISTENER
         document.getElementById('btn-connect-wallet').addEventListener('click', async () => {
             if (typeof window.ethereum !== 'undefined') {
                 try {
+                    // Triggering standard MetaMask connection popup directly
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                     userAddress = accounts[0];
                     
                     provider = new ethers.BrowserProvider(window.ethereum);
                     signer = await provider.getSigner();
                     
+                    // UI changes on successful connection
                     document.getElementById('wallet-address').innerText = `Address: ${userAddress.substring(0,6)}...${userAddress.substring(38)}`;
                     document.getElementById('btn-connect-wallet').innerText = "Connected";
                     
                     await updateRealBalance();
 
+                    // Active Event Listeners for MetaMask State Changes
                     window.ethereum.on('chainChanged', () => { updateRealBalance(); });
                     window.ethereum.on('accountsChanged', (accs) => { 
                         if(accs.length === 0) window.location.reload();
@@ -378,14 +380,15 @@
                     });
 
                 } catch (error) {
-                    console.error("Wallet connection failed:", error);
+                    console.error("Wallet connection failed/rejected:", error);
+                    alert("Connection request rejected or failed.");
                 }
             } else {
-                alert("MetaMask is not installed!");
+                alert("MetaMask is not detected. Please install or enable MetaMask extension!");
             }
         });
 
-        // এড্রেস এবং ইউজারনেম হ্যান্ডলিং ট্রানজেকশন লজিক
+        // Micro-payment transfer logic (Address + Username support)
         document.getElementById('btn-start-stream').addEventListener('click', async () => {
             let inputTarget = document.getElementById('stream-recipient').value.trim();
             const amountInput = document.getElementById('stream-rate').value;
@@ -397,14 +400,11 @@
 
             let finalRecipientAddress = inputTarget;
 
-            // যদি ইনপুট 0x দিয়ে শুরু না হয়, তাহলে এটাকে ইউজারনেম হিসেবে হ্যান্ডেল করা হবে
             if (!inputTarget.startsWith("0x")) {
                 const lowerUsername = inputTarget.toLowerCase();
                 if (USERNAME_REGISTRY[lowerUsername]) {
                     finalRecipientAddress = USERNAME_REGISTRY[lowerUsername];
-                    console.log(`Username parsed: ${inputTarget} -> ${finalRecipientAddress}`);
                 } else {
-                    // যদি ইউজারনেম রেজিস্ট্রি ফাইলে না থাকে, তবে সেফগার্ড হিসেবে ডেমো এড্রেস জেনারেট করবে
                     finalRecipientAddress = "0x742d35Cc6634C0532925a3b844Bc454e4438f44e";
                 }
             }
@@ -420,8 +420,6 @@
                 const usdcContract = new ethers.Contract(USDC_CONTRACT_ADDRESS, ERC20_ABI, currentSigner);
                 
                 const parsedAmount = ethers.parseUnits(amountInput, 6);
-                
-                // রিয়েল অন-চেইন ট্রান্সফার (ওয়ালেট ব্যালেন্স থেকে ফান্ড কাটবে)
                 const tx = await usdcContract.transfer(finalRecipientAddress, parsedAmount);
                 tickerAmount.innerText = "Transaction pending on block confirmation...";
                 
@@ -466,4 +464,7 @@
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
             voiceBtn.addEventListener('click', () => { recognition.start(); voiceOutput.innerText = "🎙️ Listening..."; });
-            recognition.onresult = (e) => { voice
+            recognition.onresult = (e) => { voiceOutput.innerText = `Captured: "${e.results[0][0].transcript}"`; };
+        }
+
+        document.getElementById('btn-simulate').addEventListener('click', () => {
