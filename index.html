@@ -4,19 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arcwise Agentic - AI Stablecoin SuperApp</title>
-    <!-- Ethers.js CDN for Real Web3 Interactivity -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     
     <style>
         /* --- ULTRA DARK PREMIUM THEME CONFIGURATION --- */
         :root {
-            --bg-color: #02040a;          /* Deep Carbon Pure Black */
-            --card-bg: #0d1117;           /* Slate Dark Card Background */
-            --border-color: #21262d;       /* Subtle Border Theme Line */
-            --text-color: #f0f6fc;         /* Crisp White Text */
-            --subtext-color: #8b949e;      /* Soft Muted Slate Gray */
-            --accent-color: #58a6ff;       /* Electric Web3 Blue */
-            --ai-neon: #39d353;            /* Neo Green Intelligence Pulse */
+            --bg-color: #02040a;          
+            --card-bg: #0d1117;           
+            --border-color: #21262d;       
+            --text-color: #f0f6fc;         
+            --subtext-color: #8b949e;      
+            --accent-color: #58a6ff;       
+            --ai-neon: #39d353;            
         }
 
         body {
@@ -27,12 +26,12 @@
             padding: 0;
         }
 
-        /* --- CRYSTAL CLEAR FIXED LOGO & NAVBAR --- */
+        /* --- NAVBAR & CRYSTAL CLEAR LOGO SYSTEM --- */
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 40px;
+            padding: 15px 20px;
             border-bottom: 1px solid var(--border-color);
             background: rgba(13, 17, 23, 0.8);
             backdrop-filter: blur(12px);
@@ -41,40 +40,31 @@
         .brand-container {
             display: flex;
             align-items: center;
-            gap: 16px; 
+            gap: 12px; 
         }
 
-        /* 
-           লোগোটি ফেটে যাওয়া রোধ করতে বক্স কন্টেইনারের সাইজ বাড়ানো হয়েছে।
-           ইমেজ অরিজিনাল সাইজ বড় থাকলে এটি ব্রাউজারের ক্রাশ বা ব্লার হওয়া আটকাবে।
-        */
         .logo-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 56px;  
-            height: 56px;
-            border-radius: 12px;
+            width: 42px;  
+            height: 42px;
+            border-radius: 10px;
             background: #0d1117; 
             border: 1px solid rgba(88, 166, 255, 0.3);
-            box-shadow: 0 0 15px rgba(88, 166, 255, 0.25);
             overflow: hidden;
         }
 
         .app-logo {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* ইমেজ টেনে লম্বা হওয়া বন্ধ করবে */
-            
-            /* ব্রাউজারের অটোমেটিক ব্লারিং বা স্মুথিং ফিল্টার সম্পূর্ণ বন্ধ করার জন্য */
-            image-rendering: -webkit-optimize-contrast; 
-            image-rendering: -moz-crisp-edges;
-            image-rendering: o-crisp-edges;
+            object-fit: cover; 
+            image-rendering: -webkit-optimize-contrast;
             image-rendering: crisp-edges;
         }
 
         .logo-text {
-            font-size: 26px;
+            font-size: 22px;
             font-weight: 800;
             background: linear-gradient(45deg, #58a6ff, #56d364);
             -webkit-background-clip: text;
@@ -96,7 +86,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 25px;
-            padding: 40px;
+            padding: 30px 20px;
             max-width: 1400px;
             margin: 0 auto;
         }
@@ -216,17 +206,16 @@
 </head>
 <body>
 
-    <!-- Header Navbar -->
     <header class="navbar">
         <div class="brand-container">
             <div class="logo-wrapper">
-                <img src="1000227687.jpg" alt="Arcwise Logo" class="app-logo">
+                <img src="https://api.screenshotone.com/v1/get-featured-image?url=https://arcwise-agentic.vercel.app&wait_until=network_idle" alt="Arcwise Logo" class="app-logo" onerror="this.src='https://images.squarespace-cdn.com/content/v1/63bc79eab2b5a153b6fa0f15/bbdf0861-f09b-4680-bc4a-25be15f27192/Arcwise+Logo+Square.png'">
             </div>
             <div class="logo-text">Arcwise Agentic</div>
         </div>
-        <div class="wallet-actions">
-            <button id="btn-circle-login" class="btn-circle" style="width: auto; margin-right: 8px;">Circle WaaS Login</button>
-            <button id="btn-connect-wallet" class="btn-secondary" style="width: auto;">Connect Wallet</button>
+        <div class="wallet-actions" style="display: flex; gap: 6px;">
+            <button id="btn-circle-login" class="btn-circle" style="font-size: 12px; padding: 10px 12px;">Circle WaaS</button>
+            <button id="btn-connect-wallet" class="btn-secondary" style="font-size: 12px; padding: 10px 12px;">Connect</button>
         </div>
     </header>
 
@@ -237,7 +226,6 @@
 
     <main class="dashboard-container">
         
-        <!-- MODULE 1: Arc Unified Balance Kit -->
         <section class="card balance-card">
             <div class="card-tag">Omnichain</div>
             <h2>Unified Balance Kit</h2>
@@ -249,7 +237,6 @@
             </div>
         </section>
 
-        <!-- MODULE 2: USDC Streaming -->
         <section class="card streaming-card">
             <div class="card-tag">DeFi Stream</div>
             <h2>USDC Micro-payments</h2>
@@ -269,7 +256,6 @@
             </div>
         </section>
 
-        <!-- MODULE 3: AI Agentic Engine -->
         <section class="card ai-card">
             <div class="card-tag">AI Intelligence</div>
             <h2>AI Agentic Engine</h2>
@@ -290,7 +276,6 @@
             </div>
         </section>
 
-        <!-- MODULE 4: Gas Abstraction -->
         <section class="card defi-card">
             <div class="card-tag">UX Engine</div>
             <h2>Intent-Based Gas & Yield</h2>
@@ -302,7 +287,6 @@
     </main>
 
     <script>
-        // JS Core Web3 UI Logic 
         let provider, userAddress;
         let streamInterval;
         let totalStreamed = 0;
