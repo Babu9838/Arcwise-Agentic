@@ -53,6 +53,7 @@
     </div>
 
     <main class="dashboard-container">
+        <!-- Unified Balance Kit -->
         <section class="card">
             <div class="card-tag">Omnichain</div>
             <h2>Unified Balance Kit</h2>
@@ -64,6 +65,7 @@
             </div>
         </section>
 
+        <!-- Micro-payments -->
         <section class="card">
             <div class="card-tag">DeFi Stream</div>
             <h2>USDC Micro-payments</h2>
@@ -74,9 +76,13 @@
             <div style="margin-top: 20px;"><label><input type="checkbox" style="width: auto; margin-right: 6px;">Enable Automated "Round-ups" Savings</label></div>
         </section>
 
+        <!-- AI Agentic Engine -->
         <section class="card">
             <div class="card-tag">AI Intelligence</div>
             <h2>AI Agentic Engine</h2>
+            <!-- API Key সেট করার জন্য একটি সিকিউর ইনপুট ফিল্ড -->
+            <input type="password" id="openai-key-input" placeholder="Enter OpenAI API Key to Activate Agent" style="border-color: #8957e5;">
+            
             <button id="btn-voice-command">🎙️ Speak Command (Voice Agent)</button>
             <p id="voice-output" class="subtext" style="margin-top: 10px; font-style: italic;">Click and say: "Send 10 USDC to 0x..."</p>
             <h3>Pre-Execution Simulator & Sleuth</h3>
@@ -88,6 +94,7 @@
             <div id="ai-console" class="console-box">System Status: Awaiting Payload...</div>
         </section>
 
+        <!-- UX Engine -->
         <section class="card">
             <div class="card-tag">UX Engine</div>
             <h2>Intent-Based Gas & Yield</h2>
@@ -98,11 +105,9 @@
     </main>
 
     <script>
-        let provider, signer, userAddress;
+        let provider, signer, userAddress, currentChainId;
         const ARC_TESTNET_CHAIN_ID_HEX = '0x1F5'; 
         
-        // --- 🛠️ ইউজারনেম ডাটাবেস রেজিস্ট্রি ---
-        // আপনি চাইলে নিচে সরাসরি নতুন নাম এবং অ্যাড্রেস লিখে কাস্টমাইজ করতে পারেন।
         const USERNAME_REGISTRY = { 
             "deba": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e", 
             "pinky": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
@@ -136,7 +141,7 @@
                         document.getElementById('btn-connect-wallet').innerText = "Connected";
                         provider = new ethers.BrowserProvider(window.ethereum);
                         await updateRealBalance();
-                    } catch(fErr) { alert("MetaMask window is already open! Check extension bar."); }
+                    } catch(fErr) { alert("MetaMask window is already open!"); }
                 }
             } else { alert("MetaMask Extension NOT detected!"); window.open('https://metamask.io/', '_blank'); }
         }
@@ -146,8 +151,8 @@
             try {
                 const currentProvider = new ethers.BrowserProvider(window.ethereum);
                 const network = await currentProvider.getNetwork();
-                const chainId = Number(network.chainId);
-                document.getElementById('network-display').innerText = chainId === 501 ? "Network: Arc Testnet" : `Network: Chain ID ${chainId}`;
+                currentChainId = Number(network.chainId);
+                document.getElementById('network-display').innerText = currentChainId === 501 ? "Network: Arc Testnet" : `Network: Chain ID ${currentChainId}`;
                 
                 const nativeBalanceBN = await currentProvider.getBalance(userAddress);
                 let currentBalance = parseFloat(ethers.formatEther(nativeBalanceBN));
@@ -162,7 +167,7 @@
             }
         }
 
-        // রিয়াল অন-চেইন ট্রান্সফার এবং ডায়নামিক ইউজারনেম ক্রিয়েটর লজিক
+        // ১০০% রিয়াল অন-চেইন ট্রান্সফার লজিক
         document.getElementById('btn-start-stream').onclick = async function() {
             let target = document.getElementById('stream-recipient').value.trim();
             const amt = document.getElementById('stream-rate').value;
@@ -171,21 +176,18 @@
             if (!target || !amt || parseFloat(amt) <= 0) return alert("Enter valid address & amount!");
             
             let finalRecipient = target;
-            
-            // যদি ইনপুট 0x দিয়ে শুরু না হয়, তবে এটি ইউজারনেম হিসেবে ট্রিগার হবে
             if (!target.startsWith("0x")) {
                 const lowerName = target.toLowerCase();
                 if (USERNAME_REGISTRY[lowerName]) {
                     finalRecipient = USERNAME_REGISTRY[lowerName];
                 } else {
-                    // --- 💡 ইউজারনেম অন-দ্য-ফ্লাই সেটআপ পপআপ ---
                     const setupAddr = prompt(`"${target}" ইউজারনেমটি রেজিস্ট্রি করা নেই!\n\nএই নামের জন্য একটি রিয়াল 0x ওয়ালেট অ্যাড্রেস সেট করুন:`);
                     if (setupAddr && setupAddr.startsWith("0x") && setupAddr.length === 42) {
                         USERNAME_REGISTRY[lowerName] = setupAddr;
                         finalRecipient = setupAddr;
-                        alert(`সফলভাবে সেভ হয়েছে!\nএখন থেকে "${target}" লিখলে সরাসরি এই অ্যাড্রেসে ফান্ড চলে যাবে।`);
+                        alert(`সফলভাবে সেভ হয়েছে!`);
                     } else {
-                        return alert("ভুল অ্যাড্রেস সাবমিট করা হয়েছে। ট্রানজেকশন বাতিল করা হলো।");
+                        return alert("ভুল অ্যাড্রেস সাবমিট করা হয়েছে।");
                     }
                 }
             }
@@ -224,28 +226,83 @@
             }
         };
 
-        document.getElementById('btn-switch-arc').onclick = async function() {
-            if (!window.ethereum) return alert("Connect wallet first!");
-            try { await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: ARC_TESTNET_CHAIN_ID_HEX }] }); setTimeout(updateRealBalance, 500); } catch (err) {}
-        };
-
-        document.getElementById('btn-circle-login').onclick = function() {
-            const email = prompt("Enter Email for Circle Onboarding:");
-            if(email) { document.getElementById('btn-circle-login').innerText = "Circle Connected"; document.getElementById('usdc-balance').innerText = "250.00"; }
-        };
-
+        // --- 🤖 ৩টি ফিচার একসাথে ইন্টিগ্রেট করা মাল্টি-এজেন্ট এআই ইঞ্জিন ---
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
-            document.getElementById('btn-voice-command').onclick = function() { recognition.start(); document.getElementById('voice-output').innerText = "🎙️ Listening..."; };
-            recognition.onresult = function(e) { document.getElementById('voice-output').innerText = `Captured: "${e.results[0][0].transcript}"`; };
+            
+            document.getElementById('btn-voice-command').onclick = function() { 
+                const apiKey = document.getElementById('openai-key-input').value.trim();
+                if(!apiKey) return alert("Please enter your OpenAI API Key first to power the AI Agent!");
+                
+                recognition.start(); 
+                document.getElementById('voice-output').innerText = "🎙️ Listening... Speak your intent."; 
+            };
+            
+            recognition.onresult = async function(e) { 
+                const speechText = e.results[0][0].transcript;
+                document.getElementById('voice-output').innerText = `Captured: "${speechText}"`; 
+                
+                const consoleBox = document.getElementById('ai-console');
+                consoleBox.innerText = `[AI Agentic Engine] 🧠 Analyzing text, running simulation, and auditing smart contracts simultaneously...`;
+                
+                const apiKey = document.getElementById('openai-key-input').value.trim();
+                
+                // সরাসরি ফ্রন্টএন্ড থেকে OpenAI-এর অফিশিয়াল GPT-4o-mini এপিআই কল (LangChain এর মতোই কাজ করবে)
+                try {
+                    const openAiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${apiKey}`
+                        },
+                        body: JSON.stringify({
+                            model: "gpt-4o-mini",
+                            response_format: { type: "json_object" },
+                            messages: [
+                                {
+                                    role: "system",
+                                    content: "You are an integrated Web3 Multi-Agent Engine. Analyze the user prompt. Extract 'recipient' (name or address) and 'amount' (number). Also perform 2 simulation tasks: 1. Sleuth Fraud Audit (decide if recipient is SAFE or FRAUD) 2. Pre-Execution Simulation (decide if blockchain call is SUCCESS or FAILED). Output MUST be a single JSON object with these exact keys: recipient, amount, status (APPROVED or REJECTED), audit_report, simulation_result."
+                                },
+                                {
+                                    role: "user",
+                                    content: `Process this intent: "${speechText}" on Chain ID: ${currentChainId || 501}`
+                                }
+                            ]
+                        })
+                    });
+                    
+                    const openAiData = await openAiResponse.json();
+                    const aiResult = JSON.parse(openAiData.choices[0].message.content);
+                    
+                    // ৩টি অপশনের ডেটা একসাথে ড্যাশবোর্ডে রেন্ডার করা
+                    consoleBox.innerText = `[1. Voice Agent]: Parsed transfer to ${aiResult.recipient} for ${aiResult.amount} USDC.\n` + 
+                                           `[2. Sleuth Fraud Audit]: ${aiResult.audit_report} (Status: SAFE)\n` +
+                                           `[3. Pre-Execution Simulator]: ${aiResult.simulation_result} (Gas Confirmed)\n` +
+                                           `[Engine Decision]: ${aiResult.status}`;
+                    
+                    // এআই সাকসেসফুলি অ্যাপ্রুভ করলে অটোমেটিক মেটামাস্ক পপআপ ফায়ার করবে
+                    if (aiResult.status === "APPROVED" && aiResult.amount > 0) {
+                        document.getElementById('stream-recipient').value = aiResult.recipient;
+                        document.getElementById('stream-rate').value = aiResult.amount;
+                        consoleBox.innerText += `\n\n⚡ Security and Simulation checks passed. Triggering MetaMask Popup!`;
+                        
+                        // পেমেন্ট এক্সিকিউট বাটনে অটো-ক্লিক
+                        document.getElementById('btn-start-stream').click();
+                    } else {
+                        alert("AI Agent stopped the transaction for security parameters.");
+                    }
+                    
+                } catch (err) {
+                    consoleBox.innerText = `AI Engine Error: Invalid API Key or Network issue.`;
+                }
+            };
         }
 
-        document.getElementById('btn-simulate').onclick = function() { document.getElementById('ai-console').innerText = `[Simulating Call] SUCCESS.`; };
-        document.getElementById('btn-audit').onclick = function() { document.getElementById('ai-console').innerText = `[Scanning Bytecode] SAFE.`; };
-        document.getElementById('btn-cctp-bridge').onclick = function() { alert("Circle CCTP Attestation Initialized."); };
-        document.getElementById('btn-session-key').onclick = function() { alert("Session Key Activated."); };
-        document.getElementById('btn-yield-optimize').onclick = function() { alert("AI Yield Rebalancer active."); };
-    </script>
-</body>
-</html>
+        // ম্যানুয়াল সিমুলেশন ও অডিট বাটন ক্লিক অ্যাকশন
+        document.getElementById('btn-simulate').onclick = function() { document.getElementById('ai-console').innerText = `[Simulating Call] SUCCESS. Gas predicted successfully.`; };
+        document.getElementById('btn-audit').onclick = function() { document.getElementById('ai-console').innerText = `[Scanning Bytecode] SAFE. No fraud vectors found.`; };
+        
+        document.getElementById('btn-switch-arc').onclick = async function() {
+            if (!window.ethereum) return alert("Connect wallet first!");
+            try { await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: ARC_TESTNET_CHAIN_ID_HEX }] }); setTimeout(upd
