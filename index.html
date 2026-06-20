@@ -101,7 +101,8 @@
         let provider, signer, userAddress;
         const ARC_TESTNET_CHAIN_ID_HEX = '0x1F5'; 
         
-        // রিয়াল ইউজারনেম টু ওয়ালেট ম্যাপিং লজিক
+        // --- 🛠️ ইউজারনেম ডাটাবেস রেজিস্ট্রি ---
+        // আপনি চাইলে নিচে সরাসরি নতুন নাম এবং অ্যাড্রেস লিখে কাস্টমাইজ করতে পারেন।
         const USERNAME_REGISTRY = { 
             "deba": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e", 
             "pinky": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
@@ -146,10 +147,8 @@
                 const currentProvider = new ethers.BrowserProvider(window.ethereum);
                 const network = await currentProvider.getNetwork();
                 const chainId = Number(network.chainId);
-                
                 document.getElementById('network-display').innerText = chainId === 501 ? "Network: Arc Testnet" : `Network: Chain ID ${chainId}`;
                 
-                // অ্যাপ-চেইন/কাস্টম টেস্টনেটের লাইভ নেটিভ ও গ্যাস ব্যালেন্স ডিক্লেয়ারেশন
                 const nativeBalanceBN = await currentProvider.getBalance(userAddress);
                 let currentBalance = parseFloat(ethers.formatEther(nativeBalanceBN));
                 
@@ -163,7 +162,7 @@
             }
         }
 
-        // ১০০% গ্যারান্টিড অন-চেইন ট্রান্সফার এক্সেকিউটর (যা ফেইল হবে না)
+        // রিয়াল অন-চেইন ট্রান্সফার এবং ডায়নামিক ইউজারনেম ক্রিয়েটর লজিক
         document.getElementById('btn-start-stream').onclick = async function() {
             let target = document.getElementById('stream-recipient').value.trim();
             const amt = document.getElementById('stream-rate').value;
@@ -171,15 +170,28 @@
             if (!userAddress || !window.ethereum) return alert("Please connect your wallet first!");
             if (!target || !amt || parseFloat(amt) <= 0) return alert("Enter valid address & amount!");
             
-            // ইউজারনেম অথবা হেক্স অ্যাড্রেস রিজল্ভিং লজিক
-            let finalRecipient = target.startsWith("0x") ? target : (USERNAME_REGISTRY[target.toLowerCase()] || target);
-            if (!finalRecipient.startsWith("0x")) {
-                return alert("Username not found! Please use a valid 0x wallet address or setup username.");
+            let finalRecipient = target;
+            
+            // যদি ইনপুট 0x দিয়ে শুরু না হয়, তবে এটি ইউজারনেম হিসেবে ট্রিগার হবে
+            if (!target.startsWith("0x")) {
+                const lowerName = target.toLowerCase();
+                if (USERNAME_REGISTRY[lowerName]) {
+                    finalRecipient = USERNAME_REGISTRY[lowerName];
+                } else {
+                    // --- 💡 ইউজারনেম অন-দ্য-ফ্লাই সেটআপ পপআপ ---
+                    const setupAddr = prompt(`"${target}" ইউজারনেমটি রেজিস্ট্রি করা নেই!\n\nএই নামের জন্য একটি রিয়াল 0x ওয়ালেট অ্যাড্রেস সেট করুন:`);
+                    if (setupAddr && setupAddr.startsWith("0x") && setupAddr.length === 42) {
+                        USERNAME_REGISTRY[lowerName] = setupAddr;
+                        finalRecipient = setupAddr;
+                        alert(`সফলভাবে সেভ হয়েছে!\nএখন থেকে "${target}" লিখলে সরাসরি এই অ্যাড্রেসে ফান্ড চলে যাবে।`);
+                    } else {
+                        return alert("ভুল অ্যাড্রেস সাবমিট করা হয়েছে। ট্রানজেকশন বাতিল করা হলো।");
+                    }
+                }
             }
             
             const ticker = document.getElementById('live-stream-ticker');
             const tickerAmt = document.getElementById('streamed-amount');
-            
             ticker.style.display = 'block'; 
             ticker.style.borderColor = "#2ea44f";
             tickerAmt.style.color = "#56d364";
@@ -189,21 +201,17 @@
                 const currentProvider = new ethers.BrowserProvider(window.ethereum);
                 const currentSigner = await currentProvider.getSigner();
                 
-                // মেটামাস্কের অফিশিয়াল নেটিভ ভ্যালু ট্রান্সফার প্রোটোকল (যা যেকোনো কাস্টম চেইনেও কাজ করতে বাধ্য)
                 const tx = await currentSigner.sendTransaction({
                     to: finalRecipient,
                     value: ethers.parseEther(amt)
                 });
                 
-                tickerAmt.innerText = "Transaction pending. Broadcasting to blockchain network...";
-                
-                // অন-চেইনে ব্লক ভ্যালিডেট হওয়া পর্যন্ত অপেক্ষা করবে
+                tickerAmt.innerText = "Transaction pending on Blockchain Network...";
                 const receipt = await tx.wait();
                 
                 if (receipt.status === 1) {
                     tickerAmt.innerText = `Success! ${amt} USDC sent to ${target}.`;
-                    alert(`Transaction Successful!\n\nFunds deducted from your real wallet balance.`);
-                    // সফল হওয়ার পর ব্যালেন্স রিয়াল-টাইম রিফ্রেশ করবে
+                    alert(`Transaction Successful!\n\nReal funds deducted from your wallet.`);
                     await updateRealBalance();
                 } else {
                     throw new Error("Reverted");
